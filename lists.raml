@@ -1,0 +1,48 @@
+#%RAML 0.8
+title: Notes Example API
+/doc:
+  displayName: Documentation
+  get:
+    description: return static html page of api documentation
+    /users:
+  displayName: Users
+  post:
+    description: Create a user (requires admin user)
+  get:
+    description: returns a list of users (requires admin user)
+/users/{ :userID}
+  displayName: User
+  get:
+    description: Get a user's name and admin status
+  delete:
+    description: Remove user and associated lists, tasks.
+/users/{ :userID}/password
+  update:
+    description: Change a user's password
+/users/{ :userID}/admin
+  update:
+    description: Change a user's admin status
+/users/{ :userID}/lists
+  post:
+    description: create a new list for a user
+  get:
+    description: return the names and listIDs of a user's lists
+/users/{ :userID}/lists/{ :listID}
+  get:
+    description: return the name and listID for a user's list
+  update:
+    description: Change the name of a list
+  delete:
+    description: remove a list and associated tasks
+/users/{ :userID}/lists/{ :listID}/tasks
+  post:
+    description: create a new task for a list
+  get:
+    description: return all tasks for the given user and list
+/users/{ :userID}/lists/{ :listID}/tasks/{ :taskID}
+  get:
+    description: create a new task for a list
+  update:
+    description: update the content of a task
+  delete:
+    description: remove the specified task

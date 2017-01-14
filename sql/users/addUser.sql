@@ -6,7 +6,7 @@ CREATE PROCEDURE addUser
    IN administrate BOOLEAN
 )
 BEGIN
-   INSERT INTO users (userName, password, admin)
+   INSERT INTO users (userName, userPassword, userAdmin)
       VALUES (name, passwd, administrate);
 END //
 DELIMITER ;

@@ -2,7 +2,7 @@ CREATE TABLE users
 (
     userId INT NOT NULL AUTO_INCREMENT,
     userName VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    admin BOOLEAN DEFAULT false,
+    userPassword VARCHAR(255) NOT NULL,
+    userAdmin BOOLEAN DEFAULT false,
     PRIMARY KEY (userId)
 );

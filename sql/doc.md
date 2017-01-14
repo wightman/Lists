@@ -5,10 +5,10 @@
 ### users
 - User table. Admin indicates ability to perform admin functions.
 ````sql
-   userId   INT          NOT NULL AUTO_INCREMENT,
-   userName VARCHAR(255) UNIQUE NOT NULL,
-   password VARCHAR(255) NOT NULL,
-   admin    BOOLEAN      DEFAULT false,
+   userId       INT          NOT NULL AUTO_INCREMENT,
+   userName     VARCHAR(255) UNIQUE NOT NULL,
+   userPassword VARCHAR(255) NOT NULL,
+   userAdmin    BOOLEAN      DEFAULT false,
    PRIMARY KEY (userId)
 ````
 ### lists
@@ -53,9 +53,11 @@
   - return a complete user record for the user.
 
 
-- `putUser(user, password, administrate)`
-  - return a complete user record for the user.
+- `putUserPassword(user, password)`
+  - set the password for the user.
 
+- `putUserAdmin(user, admin)`
+  - set the password for the user.
 
 - `delUser(user)`
   - delete the user from the user table. This also deletes all lists and tasks associated with this user.

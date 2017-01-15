@@ -3,6 +3,10 @@
 ```create database lists;```
 ## Create the tables
 run the code in
-1. createUsers.sql
-2. createLists.sql
-3. createTasks.sql
+1. users/createUsers.sql
+2. lists/createLists.sql
+3. tasks/createTasks.sql
+
+## Create the functions
+1. users/userName2Id.sql
+2. lists/listName2Id.sql

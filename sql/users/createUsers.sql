@@ -3,7 +3,7 @@ CREATE TABLE users
     userId INT NOT NULL AUTO_INCREMENT,
     userName VARCHAR(255) NOT NULL,
     userEmail VARCHAR(255) UNIQUE NOT NULL
-    userPassword BINARY(60) NOT NULL,
+    userPassword BINARY(60) NOT NULL, --BCrypted
     userAdmin BOOLEAN DEFAULT false,
     userSince TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 

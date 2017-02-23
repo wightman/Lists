@@ -1,10 +1,10 @@
 DELIMITER //
 CREATE PROCEDURE delUser
 (
-   IN user VARCHAR(255)
+   IN id INT
 )
 BEGIN
    DELETE FROM users
-      WHERE user = userName;
+      WHERE id = userId;
 END //
 DELIMITER ;

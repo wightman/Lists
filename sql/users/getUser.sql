@@ -1,10 +1,10 @@
 DELIMITER //
 CREATE PROCEDURE getUser
 (
-   IN user VARCHAR(255)
+   IN id INT
 )
 BEGIN
    SELECT * FROM users
-      WHERE user = userName;
+      WHERE id = userId;
 END //
 DELIMITER ;

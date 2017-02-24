@@ -1,13 +1,13 @@
 DELIMITER //
 CREATE PROCEDURE addTask
 (
-   IN user VARCHAR(255),
-   IN list VARCHAR(255),
+   IN lid INT,
    IN task VARCHAR(255),
+   IN taskPos INT,
    IN done BOOLEAN
 )
 BEGIN
-   INSERT INTO tasks (listId, task, completed)
-         VALUES (listName2Id(user,list), task, done);
+   INSERT INTO tasks (listId, task, taskPosition, completed)
+         VALUES (lid, task, taskPos, done);
 END //
 DELIMITER ;

@@ -6,7 +6,7 @@ CREATE PROCEDURE delList
 )
 BEGIN
    DELETE FROM lists
-      WHERE userId = userName2Id(user) AND
-         list = listname;
+      WHERE user = userId AND
+         list = listName;
 END //
 DELIMITER ;

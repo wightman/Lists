@@ -1,13 +1,11 @@
 DELIMITER //
 CREATE PROCEDURE getList
 (
-  IN user VARCHAR(255),
-  IN list VARCHAR(255)
+  IN lid INT
 )
 BEGIN
-   SELECT listname, listId
+   SELECT *
       FROM lists
-      WHERE userid = userName2Id(user) AND
-      list = listName;
+      WHERE lid = listId;
 END //
 DELIMITER ;

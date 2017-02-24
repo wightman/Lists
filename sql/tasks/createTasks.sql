@@ -1,7 +1,7 @@
 CREATE TABLE tasks
 (
     taskId INT NOT NULL AUTO_INCREMENT,
-    taskPosition INT NOT NULL,
+    taskPosition INT NOT NULL DEFAULT 1,
     task VARCHAR(255),
     completed BOOLEAN DEFAULT false,
     listId INT NOT NULL,

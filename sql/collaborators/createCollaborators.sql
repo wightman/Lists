@@ -1,21 +1,24 @@
-CREATE TABLE collaborators
-(
-    userId INT NOT NULL,
-    listId INT NOT NULL,
-    access CHAR(1),
-    collaboratorSince  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT collaboratorUser FOREGIN KEY userID REFERENCES users(userID)
-        ON DELETE CASCADE,
-    CONSTRAINT collaboratorList FOREGIN KEY access REFERENCES lists(listID)
-        ON DELETE CASCADE,
-    CONSTRAINT collaboratorAccess FOREGIN KEY access REFERENCES access(access)
-);
-
-CREATE TABLE access
+CREATE TABLE accessTypes
 (
    access CHAR(1) UNIQUE
 );
 
-INSERT INTO access ('R');
-INSERT INTO access ('W');
+INSERT INTO accessTypes (access) VALUES ('R');
+INSERT INTO accessTypes (access) VALUES ('W');
+
+CREATE TABLE collaborators
+(
+    userId INT NOT NULL,
+    listId INT NOT NULL,
+    access CHAR(1) NOT NULL,
+    collaboratorSince TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (userId)
+        REFERENCES users(userId)
+        ON DELETE CASCADE,
+    FOREIGN KEY (listId)
+        REFERENCES lists(listId)
+        ON DELETE CASCADE,
+    FOREIGN KEY (access)
+        REFERENCES accessTypes(access)
+);

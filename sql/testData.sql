@@ -21,3 +21,6 @@ CALL getListTasks(2);
 
 -- Make me a collaborator on your list
 CALL addCollaborator(1,2,'R');
+
+-- List collaborators, access for a listName
+CALL listCollaborators(2)

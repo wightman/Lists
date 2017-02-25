@@ -1,12 +1,16 @@
 DELIMITER //
 CREATE PROCEDURE putUser
 (
-  IN user VARCHAR(255),
-  IN pass VARCHAR(255)
+  IN uid INT,
+  IN uName VARCHAR(255),
+  IN uEmail VARCHAR(255),
+  IN uAdmin BOOLEAN
 )
 BEGIN
    UPDATE users
-      SET  password = pass
-      WHERE userId = userName2Id(user);
+      SET  userName = uName,
+           userEmail = uEmail,
+           userAdmin = uAdmin
+      WHERE userId = uid;
 END //
 DELIMITER ;

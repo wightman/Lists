@@ -1,12 +1,10 @@
 DELIMITER //
 CREATE PROCEDURE delList
 (
-   IN user CHAR(255),
-   IN list CHAR(255)
+   IN lid INT
 )
 BEGIN
    DELETE FROM lists
-      WHERE user = userId AND
-         list = listName;
+      WHERE listId = lid;
 END //
 DELIMITER ;

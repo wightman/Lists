@@ -4,7 +4,7 @@ CREATE PROCEDURE getUser
    IN id INT
 )
 BEGIN
-   SELECT * FROM users
+   SELECT userId, userName, userEmail, userAdmin, userSince FROM users
       WHERE id = userId;
 END //
 DELIMITER ;

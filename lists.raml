@@ -4,12 +4,21 @@ title: Notes Example API
   displayName: Documentation
   get:
     description: return static html page of api documentation
-    /users:
+
+/signin/
+  displayName: create a session
+  post:
+    description: return a server-side cookie
+  delete:
+    description: remove an existing server-side cookie
+
+
+/users:
   displayName: Users
   post:
     description: Create a user (requires admin user)
   get:
-    description: returns a list of users (requires admin user)
+    description: returns a list of users
 /users/{ :userID}
   displayName: User
   get:
@@ -18,7 +27,7 @@ title: Notes Example API
     description: Remove user and associated lists, tasks.
 /users/{ :userID}/password
   update:
-    description: Change a user's password
+    description: Change a user's password (must be the user or admin)
 /users/{ :userID}/admin
   update:
     description: Change a user's admin status
@@ -34,15 +43,36 @@ title: Notes Example API
     description: Change the name of a list
   delete:
     description: remove a list and associated tasks
-/users/{ :userID}/lists/{ :listID}/tasks
+
+
+/lists/{ :listID}/tasks
   post:
-    description: create a new task for a list
+    description: create a new task for a list, (collaborators allowed)
   get:
-    description: return all tasks for the given user and list
-/users/{ :userID}/lists/{ :listID}/tasks/{ :taskID}
+    description: return all tasks for the given list, (collaborators allowed)
+
+/lists/{ :listID}/tasks/{ :taskID}
   get:
-    description: create a new task for a list
+    description: get a task for a list, (collaborators allowed)
   update:
-    description: update the content of a task
+    description: update the content of a task (collaborators allowed)
   delete:
-    description: remove the specified task
+    description: remove the specified task (collaborators allowed)
+
+
+/collaborators/lists/{ :listId}/
+  post:
+    description: create a new collaborator for a list (only owner allowed)
+  get:
+    description: get the userIds and accesstype for collaborators of a list, (owner allowed)
+
+/collaborators/lists/{ :listId}/users/{ :userId}
+  update:
+    description: update the accesstype for a list collaborator (only owner allowed)
+  delete:
+    description: delete collaborator from a list (user or list owner allowed).
+       Does not remove collaborator contributions
+
+/collaborators/users/{ :userId}
+  get:
+    description: get the listIds that a user is a collaborator in.

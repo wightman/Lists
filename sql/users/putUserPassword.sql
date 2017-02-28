@@ -1,7 +1,7 @@
 DELIMITER //
 CREATE PROCEDURE putUserPassword
 (
-  IN uEmail VARCHAR(255),
+  IN uid INT,
   IN uPassword BINARY(60)
 )
 BEGIN

@@ -29,13 +29,14 @@ types:
     type: array
     items: task
   task:
-    taskId: integer
-    taskPosition: integer
-    task: string
-    completed: boolean
-    listId: integer
-    creatorId: integer
-    taskSince: datetime
+    properties:
+      taskId: integer
+      taskPosition: integer
+      task: string
+      completed: boolean
+      listId: integer
+      creatorId: integer
+      taskSince: datetime
 /login:
   put:
     body:

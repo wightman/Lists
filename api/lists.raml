@@ -1,0 +1,62 @@
+#%RAML 1.0
+title: List Manager
+version: 0.8
+baseUri: http://lists.hopto.org/
+description: API for list management and collaboration
+mediaType: [application/json]
+types:
+  Users:
+    type: array
+    items: user
+  user:
+    type: object
+    properties:
+      userId: integer
+      userName: string
+      userEmail: string
+      userAdmin: boolean
+      userSince: datetime
+  Lists:
+    type: array
+    items: list
+  list:
+    properties:
+      listId: integer
+      listName: string
+      userId: integer
+      listSince: datetime
+  Tasks:
+    type: array
+    items: task
+  task:
+    taskId: integer
+    taskPosition: integer
+    task: string
+    completed: boolean
+    listId: integer
+    creatorId: integer
+    taskSince: datetime
+/login:
+  put:
+    body:
+      application/json:
+        example:
+          {
+          "username" : "crap",
+          "password" : "$2a$06$nQF2/bRxx97ffxll0qleuekyAfL8gp0Lt3n5Do.Px0ms0g26d20hW"
+          }
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include examples/loginSuccess.raml
+      401:
+        body:
+          application/json:
+            example: !include examples/error.raml
+  delete:
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include examples/success.raml

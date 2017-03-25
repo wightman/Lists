@@ -5,7 +5,7 @@ CREATE TABLE tasks
     task VARCHAR(255),
     completed BOOLEAN DEFAULT false,
     listId INT NOT NULL,
-    collaboratorId INT NOT NULL,
+    creatorId INT NOT NULL, 
     taskSince  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY (taskId),

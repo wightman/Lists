@@ -5,59 +5,93 @@ baseUri: http://lists.hopto.org/
 description: API for list management and collaboration
 mediaType: [application/json]
 types:
-  Users:
-    type: array
-    items: user
-  user:
-    type: object
-    properties:
-      userId: integer
-      userName: string
-      userEmail: string
-      userAdmin: boolean
-      userSince: datetime
-  Lists:
-    type: array
-    items: list
-  list:
-    properties:
-      listId: integer
-      listName: string
-      userId: integer
-      listSince: datetime
-  Tasks:
-    type: array
-    items: task
-  task:
-    properties:
-      taskId: integer
-      taskPosition: integer
-      task: string
-      completed: boolean
-      listId: integer
-      creatorId: integer
-      taskSince: datetime
+  login-createRequest: !include types/login-createRequest.raml
+
+  user-createRequest: !include types/user-createRequest.raml
+  Users-response: !include types/Users-response.raml
+  user-response: !include types/user-response.raml
+
+  list-createRequest: !include types/list-createRequest.raml
+  Lists-response: !include types/Lists-response.raml
+  list-response: !include types/list-response.raml
+
+  task-createRequest: !include types/task-createRequest.raml
+  Tasks-response: !include types/Tasks-response.raml
+  task-response: !include types/task-response.raml
+
+  collaborator-createRequest: !include types\collaborator-createRequest.raml
+  Collaborators: !include types\Collaborators-response.raml
+  collaborator-response: !include types\collaborators-response.raml
+
+  createResourceResponse: !include types/createResourceResponse.raml
+
 /login:
   put:
     body:
       application/json:
-        example:
-          {
-          "username" : "crap",
-          "password" : "$2a$06$nQF2/bRxx97ffxll0qleuekyAfL8gp0Lt3n5Do.Px0ms0g26d20hW"
-          }
+        example: !include examples/loginPutRequest.json
+        type: login-createRequest
     responses:
       200:
         body:
           application/json:
-            example: !include examples/loginSuccess.raml
+            example: !include examples/loginPut200.json
       401:
+        description: No recognized username/password combination.
         body:
           application/json:
-            example: !include examples/error.raml
+            example: !include examples/loginPut401.json
   delete:
     responses:
       200:
         body:
           application/json:
-            example: !include examples/success.raml
+            example: !include examples/success200.raml
+/Users:
+  description: Retrieve a list of users
+  post:
+    body:
+      application/json:
+        type: user-createRequest
+        example: !include examples/user-createRequest.json
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include examples/loginPut200.json
+            type: createResourceResponse
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            type: Users-response
+
+  /uId:
+    delete:
+    get:
+    put:
+/Lists:
+  description: Retrieve a list of users
+  post:
+    body:
+      application/json:
+        type: list-createRequest
+        example: !include examples/list-createRequest.json
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include examples/loginPut200.json
+            type: createResourceResponse
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            type: Lists-response
+
+  /lId:
+    delete:
+    get:
+    put:

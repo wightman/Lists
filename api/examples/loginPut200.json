@@ -1,4 +1,3 @@
-title:json document returned with successful login
 {
   "status" : "success",
   "href" : "{baseUri}/users/23"

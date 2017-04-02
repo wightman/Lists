@@ -46,7 +46,7 @@ types:
       200:
         body:
           application/json:
-            example: !include examples/success200.raml
+            example: !include examples/success200.json
 /Users:
   description: Retrieve a list of users
   post:
@@ -67,10 +67,31 @@ types:
           application/json:
             type: Users-response
 
-  /uId:
-    delete:
+  /{uId}:
+    description: Individual user record access
+
     get:
+      responses:
+        200:
+          body:
+            application/json:
+              type: user-response
+        404:
+          body:
+            application/json:
+              example: !include examples/error.json
     put:
+      body:
+        application/json:
+          type: user-createRequest
+      responses:
+        200:
+          body:
+            application/json:
+              type: createResourceResponse
+    delete:
+      responses:
+        204:
 /Lists:
   description: Retrieve a list of users
   post:
@@ -91,7 +112,7 @@ types:
           application/json:
             type: Lists-response
 
-  /lId:
+  /{lId}:
     delete:
     get:
     put:

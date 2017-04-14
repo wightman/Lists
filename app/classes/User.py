@@ -1,6 +1,6 @@
 # User.py Rick Wightman, April 2017
 #
-# Schema/class representing users. S
+# Schema/class representing users. Used to pass data DB->Client
 #
 from marshmallow import Schema, fields, post_load
 

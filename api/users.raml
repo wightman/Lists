@@ -11,43 +11,26 @@ types:
   Users-response: !include types/Users-response.raml
   user-response: !include types/user-response.raml
   user-changePassword: !include types/user-changePassword.raml
-
-  list-createRequest: !include types/list-createRequest.raml
-  Lists-response: !include types/Lists-response.raml
-  list-response: !include types/list-response.raml
-
-  task-createRequest: !include types/task-createRequest.raml
-  Tasks-response: !include types/Tasks-response.raml
-  task-response: !include types/task-response.raml
-
-  collaborator-createRequest: !include types\collaborator-createRequest.raml
-  Collaborators: !include types\Collaborators-response.raml
-  collaborator-response: !include types\Collaborators-response.raml
-
-  createResourceResponse: !include types/createResourceResponse.raml
-
+  user-createResponse:
 /login:
-  put:
+  description: login management
+  post:
+    description: Establish a login session.
     body:
       application/json:
-        example: !include examples/loginPutRequest.json
+        example: !include examples/loginCreateRequest.json
         type: login-createRequest
     responses:
-      200:
+      201:
         body:
           application/json:
-            example: !include examples/loginPut200.json
+            example: !include examples/userSuccess.json
       401:
         description: No recognized username/password combination.
-        body:
-          application/json:
-            example: !include examples/loginPut401.json
   delete:
+    description: Remove a login session.
     responses:
-      200:
-        body:
-          application/json:
-            example: !include examples/success.json
+      204:
 /Users:
   description: User management
   post:
@@ -60,8 +43,9 @@ types:
       200:
         body:
           application/json:
-            example: !include examples/loginPut200.json
+            example: !include examples/userResponse.json
             type: createResourceResponse
+      403:
   get:
     description: Retrieve a set of users
     responses:
@@ -111,44 +95,8 @@ types:
           200:
             body:
               application/json:
-                example: !include examples/success.json
+                example: !include examples/success200.json
           401:
             body:
               application/json:
                 example: !include examples/error.json
-/Lists:
-  description: Manage lists
-  post:
-    description: Create a new list
-    body:
-      application/json:
-        type: list-createRequest
-        example: !include examples/list-createRequest.json
-    responses:
-      200:
-        body:
-          application/json:
-            example: !include examples/loginPut200.json
-            type: createResourceResponse
-  get:
-    description: Retrieve a set of lists
-    responses:
-      200:
-        body:
-          application/json:
-            type: Lists-response
-
-  /{lId}:
-    description: Indivdual list information (not the list's tasks)
-    delete:
-    get:
-    put:
-      description: Update an individual list (not the list's tasks)
-      body:
-        application/json:
-          type: list-createRequest
-      responses:
-        200:
-          body:
-            application/json:
-              type: updateResourceResponse

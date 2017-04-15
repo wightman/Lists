@@ -5,7 +5,7 @@ CREATE PROCEDURE putUserPassword
   IN uPassword BINARY(60)
 )
 BEGIN
-   SELECT  users
+   UPDATE  users
       SET  userPassword = uPassword
       WHERE userId = uid;
 END //

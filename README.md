@@ -1,37 +1,24 @@
-## Welcome to GitHub Pages
+## Welcome to Lists
+This is an effort to capture a reasonable body of knowledge (technologies, frameworks, practices) for generating a restful webAPI/webservice. With time I'm hoping to deliver a browser client app as well as Android app. Hopefully this serves as a suitable model for aspiring web developers, both backend and frontend(s).
 
-You can use the [editor on GitHub](https://github.com/wightman/Lists/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+The project is intended to portray a reasonable expectation for student projects in an undergraduate university course in [programming on the web](http://www.unb.ca/academics/calendar/undergraduate/current/frederictoncourses/informationsystems/info-3103.html) or an [introduction to mobile application development](http://www.unb.ca/academics/calendar/undergraduate/current/frederictoncourses/computer-science/cs-2063.html).
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+You can safely assume that at any point in time this project is broken, cannot be trusted and will never put gas in the car after borrowing it - _you have been warned._ Having said that,
+you're welcome to use it as the basis for your broken or fabulously-working project. If it's the fabulously-working variety, I'd love some credit :)
 
-### Markdown
+## What's In Here
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+Building on what's gone before, this is a YATDL (**Y** et **A** nother **T** o **D** o **L** ist) application. As you're well aware, the web needs at least one more of these. Or at least one with all the parts, together.
 
-```markdown
-Syntax highlighted code block
+The project has some less than perfect requirements:
++ You need to create the database tables and stored procedures. The initial user will need to be added by hand.
++ It uses the Flask builtin webserver.
 
-# Header 1
-## Header 2
-### Header 3
+### Technologies
++ The server uses python + restful-flask, communicating in json.
++ The database is mySQL. This may (should?) change to MariaDB. All DB interaction is through stored procedures.
++ The api is modeled using raml.
 
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/wightman/Lists/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+### Other Notes
++ The application structure is adopted from [this guide](https://flask-restful.readthedocs.io/en/0.3.5/intermediate-usage.html)
++ Each major division _should_ have a README.md within it, outlining its details.

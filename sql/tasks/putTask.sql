@@ -2,14 +2,16 @@ DELIMITER //
 CREATE PROCEDURE putTask
 (
   IN tId INT,
-  IN item VARCHAR(255),
+  IN task VARCHAR(255),
+  IN taskDetail VARCHAR(255),
   IN pos INT,
   IN done BOOLEAN
 )
 BEGIN
    UPDATE tasks
       SET  completed = done,
-           task = item, 
+           taskName = task,
+           taskDescription = taksDetail, 
            taskPosition = pos
       WHERE tid = taskId;
 END //

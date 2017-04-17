@@ -4,56 +4,44 @@
 - `addUser(name, email, passwd, admin)`
   - add a record to the user table.
   - Example
-
   ```
 CALL addUser('You', 'you@unb.ca','$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a', true);
 ```
----
 - `delUser(userId)`
   - Delete a user.
   - Removes all associated lists, tasks and collaborations
   - Example
-
   ```
 CALL delUser(22);
 ```
----
 - `getUserNames()`
   - return a table of usernames
   - Example
-
   ```
-  CALL getUserNames();
-  ```
----
+CALL getUserNames();
+```
 - `loginUser(userEmail, password)`
   - confirm login credentials
   - Example
-
   ```
     CALL loginUser('you@unb.ca', '$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a');
   ```
----
 - `putUser(userId, userName, userEmail, userAdmin)`
-  - replacee values for an existing user.
+  - replace values for an existing user.
   - Example
-
   ```
   putUser(22, 'Me', me@unb.ca, true);
   ```
----
 - `putUserPassword(userId, password)`
   - set the password for the user.
   - Example
-
   ```
     putUserPassword(22, '$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPXXhAc1h5teetXv2lsdI77P3q.5a')
     ```
 ---
 ## Procedures for the ```lists``` table
----
 - `addList(userId, list)`
-  - add a record to the list table for the given user.
+  - add a record to the list table for the given user.  
 
 
 - `getList(userId, list)`

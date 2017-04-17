@@ -2,10 +2,11 @@ CREATE TABLE tasks
 (
     taskId INT NOT NULL AUTO_INCREMENT,
     taskPosition INT NOT NULL DEFAULT 1,
-    task VARCHAR(255),
+    taskName VARCHAR(255),
+    taskDescription VARCHAR(255),
     completed BOOLEAN DEFAULT false,
     listId INT NOT NULL,
-    creatorId INT NOT NULL, 
+    creatorId INT NOT NULL,
     taskSince  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY (taskId),

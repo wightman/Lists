@@ -11,7 +11,7 @@ BEGIN
    UPDATE tasks
       SET  completed = done,
            taskName = task,
-           taskDescription = taksDetail, 
+           taskDescription = taskDetail, 
            taskPosition = pos
       WHERE tid = taskId;
 END //

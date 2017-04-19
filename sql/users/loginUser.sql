@@ -9,5 +9,8 @@ BEGIN
       FROM users
       WHERE userEmail = uEmail AND
             uPassword = userPassword;
+      IF(ROW_COUNT() = 0) THEN
+         CALL raise_application_error(77002, 'Bad credentials');
+      END IF;
 END //
 DELIMITER ;

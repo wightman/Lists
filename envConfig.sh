@@ -7,4 +7,4 @@ pip install flask-restful
 pip install --upgrade pip
 pip3 install flask-restful
 pip install jsondate
-pip install PyMySQL
+pip install PyMySQL # https://pymysql.readthedocs.io/en/latest/

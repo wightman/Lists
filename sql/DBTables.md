@@ -44,27 +44,27 @@
 - Tasks need not have unique descriptions (task).
 - Tasks are denoted with the userID of their creator (collaboratorID)
 - Tasks disappear when lists are deleted.
-```sql
-
-  taskId INT NOT NULL AUTO_INCREMENT,
-  taskPosition INT NOT NULL DEFAULT 1,
-  task VARCHAR(255),
-  completed BOOLEAN DEFAULT false,
-  listId INT NOT NULL,
-  collaboratorID INT NOT NULL,
-  taskSince  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+````sql
+taskId INT NOT NULL AUTO_INCREMENT,
+taskPosition INT NOT NULL DEFAULT 1,
+taskName VARCHAR(255),
+taskDescription VARCHAR(255),
+completed BOOLEAN DEFAULT false,
+listId INT NOT NULL,
+creatorId INT NOT NULL,
+taskSince  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
   PRIMARY KEY (taskId),
   FOREIGN KEY (listId)
         REFERENCES lists(listId)
         ON DELETE CASCADE
-```
+````
 
 ### collaborators
 - Collaborators on lists
 - Collaborators disappear when lists are deleted.
 - Value in access column *must* be present in the accessType table
-```sql
+````sql
   userId INT NOT NULL,
   listId INT NOT NULL,
   access CHAR(1) NOT NULL,
@@ -78,11 +78,11 @@
     ON DELETE CASCADE,
   FOREIGN KEY (access)
     REFERENCES accessTypes(access)
-```
+````
 
 ### accessTypes
 - List of types of access for collaborators
 - Used to work-around mySQL not supporting CHECK IN constraints
-```sql
+````sql
   access CHAR(1) UNIQUE
-```
+````

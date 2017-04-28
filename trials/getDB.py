@@ -3,7 +3,6 @@
 # Trial to get data using MySQLdb into a dictionary object and then convert to
 # json using marshmallow
 from marshmallow import Schema, fields, post_load
-import MySQLdb
 
 class User(object):
     def __init__(self, id, name, email, admin, created, uri):
@@ -30,7 +29,22 @@ class UserSchema(Schema):
     def make_user(self, data):
         return User(**data)
 
-db = MySQLdb.connect(host='localhost', user='wightman', passwd='JesusL0vesMe!', db='lists', cursorclass=MySQLdb.cursors.DictCursor)
+import pymysql.cursors
+db = pymysql.connect(host='localhost',
+                    user='wightman',
+                    passwd='JesusL0vesMe!',
+                    db='lists',
+                    charset='utf8',
+                    cursorclass= pymysql.cursors.DictCursor)
 cursor = db.cursor()
-cursor.callproc('getUsersAll')
-data = cursor.fetchone()
+try:
+    #cursor.execute('throwError')
+    cursor.callproc('throwError')
+    cursor.close()
+except Exception as e:
+    print('Yay!')
+
+print('boo!')
+
+
+#data = cursor.fetchone()

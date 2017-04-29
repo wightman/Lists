@@ -1,13 +1,19 @@
 DELIMITER //
 CREATE PROCEDURE addUser
 (
-   IN name VARCHAR(255),
-   IN email VARCHAR(255),
-   IN passwd BINARY(60),
-   IN admin BOOLEAN
+   IN uName VARCHAR(255),
+   IN uEmail VARCHAR(255),
+   IN uPasswd BINARY(60),
+   IN uAdmin BOOLEAN
 )
 BEGIN
    INSERT INTO users (userName, userEmail, userPassword, userAdmin)
-      VALUES (name, email, passwd, admin);
+      VALUES (uName, uEmail, uPasswd, uAdmin);
+
+    /* Error 52701: Unable to add the user*/
+    IF(FOUND_ROWS() = 0) THEN
+      SIGNAL SQLSTATE '52701'
+        SET MESSAGE_TEXT = 'Unable to add the user.';
+   END IF;
 END //
 DELIMITER ;

@@ -9,9 +9,3 @@ CREATE TABLE users
 
     PRIMARY KEY (userId)
 );
-/* http://dba.stackexchange.com/questions/20217/mysql-set-utc-time-as-default-timestamp
-   and in particular setting the default for the database:
-   [mysqld]
-   **other variables**
-  default_time_zone='+00:00'
- */

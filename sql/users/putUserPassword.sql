@@ -8,9 +8,11 @@ BEGIN
    UPDATE  users
       SET  userPassword = uPassword
       WHERE userId = uid;
-  IF(ROW_COUNT() = 0) THEN
-    SIGNAL SQLSTATE '77001'
-    SET MESSAGE_TEXT = 'User does not exist';
-  END IF;
+
+    /* Error 52702: User not found*/
+    IF(ROW_COUNT() = 0) THEN
+      SIGNAL SQLSTATE '52702'
+        SET MESSAGE_TEXT = 'User not found.';
+    END IF;
 END //
 DELIMITER ;

@@ -1,10 +1,38 @@
 -- build some users
-INSERT INTO users (userName, userEmail, userPassword, userAdmin)
-   VALUES('Me', 'me@unb.ca','$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a', true);
-CALL addUser('You', 'you@unb.ca','$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a', true);
+INSERT INTO users (userName, userEmail, userPassword, userAdmin) VALUES('Me', 'me@unb.ca','$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a', true);
+CALL addUser('You', 'you@example.ca','$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a', true);
+CALL addUser('Me', 'me@example.ca','$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a', true);
+CALL addUser('Them', 'them@example.ca','$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a', true);
+
+CALL delUser(3);
+-- should break
+CALL delUser(1000);
 
 CALL getUser(1);
-CALL getUserNames(); -- need to create
+-- should break
+CALL getUser(1000);
+
+CALL getUserNames();
+CALL getUsersAll();
+
+CALL verifyUser('me@example.ca','$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a');
+-- should break
+CALL verifyUser('me@example.ca','$FAIL0$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a');
+
+CALL putUser(1, 'You', 'TheNewYou@example.ca');
+-- should break
+CALL putUser(1000, 'You', 'TheNewYou@example.ca');
+
+CALL putUserPassword(1,'$FAIL0$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a');
+-- should break
+CALL putUserPassword(1000,'$FAIL0$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a');
+
+CALL setUserAdmin(1, false);
+-- should break
+CALL setUserAdmin(1000, false);
+
+-- All user table procedures work!
+
 -- build a list
 CALL addList(1, 'Stuff');
 CALL addList(2, 'INFO1103');

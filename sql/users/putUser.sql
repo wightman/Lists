@@ -1,7 +1,7 @@
 DELIMITER //
 CREATE PROCEDURE putUser
 (
-  IN uid INT,
+  IN uId INT,
   IN uName VARCHAR(255),
   IN uEmail VARCHAR(255)
 )
@@ -9,7 +9,7 @@ BEGIN
    UPDATE users
       SET  userName = uName,
            userEmail = uEmail
-      WHERE userId = uid;
+      WHERE userId = uId;
 
    /* Error 52702: User not found*/
    IF(ROW_COUNT() = 0) THEN

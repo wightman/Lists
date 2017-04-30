@@ -34,14 +34,14 @@ CALL setUserAdmin(1000, false);
 -- All user table procedures work!
 
 -- build a list
-CALL addList(1, 'Stuff', NULL);
-CALL addList(2, 'INFO1103', 'What to do until the exam.');
+CALL addList(2, 'Stuff', NULL);
+CALL addList(1,'INFO1103', 'To do before the end of term');
 
 CALL delList(2);
 -- should break
 CALL delList(1000);
 
-CALL getList(2);
+CALL getList(1);
 -- should break
 CALL getList(1000);
 
@@ -49,7 +49,7 @@ CALL getUserLists(2);
 -- should break
 CALL getUserLists(1000);
 
-CALL putList(7, 'Awesomeness', 'work in progress!');
+CALL putList(2,'INFO1103','Stuff I should have done.');
 -- should break
 CALL putList(1000, 'Awesomeness', 'work in progress!');
 

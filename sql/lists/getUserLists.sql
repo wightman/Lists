@@ -1,11 +1,15 @@
 DELIMITER //
 CREATE PROCEDURE getUserLists
 (
-  IN uid INT
+  IN uId INT
 )
 BEGIN
-   SELECT listname, listId
+   SELECT *
       FROM lists
-      WHERE userid = uid;
+      WHERE userId = uId;
+    IF(FOUND_ROWS() = 0) THEN
+      SIGNAL SQLSTATE '52702'
+        SET MESSAGE_TEXT = 'User not found.';
+    END IF;
 END //
 DELIMITER ;

@@ -1,10 +1,14 @@
 DELIMITER //
 CREATE PROCEDURE delList
 (
-   IN lid INT
+   IN lId INT
 )
 BEGIN
    DELETE FROM lists
-      WHERE listId = lid;
+      WHERE listId = lId;
+    IF(ROW_COUNT() < 1) THEN
+      SIGNAL SQLSTATE '52704'
+        SET MESSAGE_TEXT = 'List not found.';
+    END IF;
 END //
 DELIMITER ;

@@ -1,11 +1,11 @@
 DELIMITER //
 CREATE PROCEDURE getUser
 (
-   IN id INT
+   IN uId INT
 )
 BEGIN
    SELECT userId, userName, userEmail, userAdmin, userSince FROM users
-      WHERE id = userId;
+      WHERE userId = uId;
   /* Error 52702: User not found*/
   IF(FOUND_ROWS() = 0) THEN
     SIGNAL SQLSTATE '52702'

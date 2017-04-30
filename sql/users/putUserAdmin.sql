@@ -1,13 +1,13 @@
 DELIMITER //
 CREATE PROCEDURE putUserAdmin
 (
-  IN uid INT,
+  IN uId INT,
   IN uAdmin BOOLEAN
 )
 BEGIN
    UPDATE users
       SET  userAdmin = uAdmin
-      WHERE userId = uid;
+      WHERE userId = uId;
 
     /* Error 52702: User not found*/
     IF(ROW_COUNT() = 0) THEN

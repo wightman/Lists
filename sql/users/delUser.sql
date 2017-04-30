@@ -5,7 +5,7 @@ CREATE PROCEDURE delUser
 )
 BEGIN
    DELETE FROM users
-      WHERE uId = userId;
+      WHERE userId = uId;
   /* Error 52702: User not found*/
   IF(ROW_COUNT() < 1) THEN
     SIGNAL SQLSTATE '52702'

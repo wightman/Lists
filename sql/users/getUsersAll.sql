@@ -1,7 +1,5 @@
 DELIMITER //
-CREATE PROCEDURE getUsersAll
-(
-)
+CREATE PROCEDURE getUsersAll()
 BEGIN
    SELECT userId, userName, userEmail, userAdmin, userSince FROM users;
 END //

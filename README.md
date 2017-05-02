@@ -21,4 +21,4 @@ The project has some less than perfect requirements:
 
 ### Other Notes
 + The application structure is adopted from [this guide](https://flask-restful.readthedocs.io/en/0.3.5/intermediate-usage.html)
-+ Each major division _should_ have a README.md within it, outlining its details.
++ Each major division _should_ have a README.md within it, outlining its own details.

@@ -54,7 +54,7 @@ CALL getUserNames();
   - set the password for the user.
   - Example
   ```sql
-    putUserPassword(22, '$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPXXhAc1h5teetXv2lsdI77P3q.5a')
+  CALL putUserPassword(22, '$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPXXhAc1h5teetXv2lsdI77P3q.5a')
     ```
   - on error: `ERROR 1644 (52702): User not found.`
 
@@ -70,26 +70,51 @@ CALL getUserNames();
 
 
 ###  ```lists``` table
-- `addList(userId, list)`
+
+- `addList(userId, listName, listDescription)`
   - add a record to the list table for the given user.  
+  - Example
+  ```sql
+    CALL addList(1,'INFO1103', 'To do before the end of term');
+    ```
+  - on error: `ERROR 1644 (52703): Unable to create the list.'
 
 
-- `getList(userId, list)`
+- `delList(listID)`
+  - remove a list
+  - also removes corresponding task items and collaborators
+  - Example
+  ```sql
+    CALL delList(2);
+    ```
+  - on error: `ERROR 1644 (52704): List not found.
+
+- `getList(listId)`
+  - return the list record for a listId. *Note this does not return the set of tasks for the list.*
+  - Example
+  ```sql
+    CALL getList(1);
+    ```
+    - on error: `ERROR 1644 (52704): List not found.
+
+- `getUserLists(userId)`
   - return the list name and listId for a user's list record.
+  - Example
+  ```sql
+    CALL getUserLists(2);
+    ```
+  - on error: `ERROR 1644 (52702): User not found.`
 
 
-- `putUser(user, password, administrate)`
-  - return a complete user record for the user.
+- `putList(listID, listName, listDescription)`
+  - update information for a list.
+  - Example
+  ```sql
+    CALL putList(2,"INFO1103","Stuff I should have done.");
+    ```
+  - on error: `ERROR 1644 (52702): User not found.`
 
-
-- `delList(user, list)`
-  - delete the user's list from the list table and the associated tasks as well.
-
-
-- `getUserLists(user)`
-  - return the list and listId from a user's list records.
-
-
+### ```tasks``` table
 
 - `addTask(user, list, task, completed)`
   - add a task to a user's list
@@ -105,6 +130,9 @@ CALL getUserNames();
 
 - `delTask(taskId)`
   - delete a specific task via it's ID.
+
+  ### ```collaborators``` table
+
 
 ## Tables
 

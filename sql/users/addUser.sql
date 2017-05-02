@@ -14,6 +14,6 @@ BEGIN
     IF(FOUND_ROWS() = 0) THEN
       SIGNAL SQLSTATE '52701'
         SET MESSAGE_TEXT = 'Unable to add the user.';
-   END IF;
+    END IF;
 END //
 DELIMITER ;

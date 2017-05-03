@@ -49,24 +49,31 @@ CALL getUserLists(1);
 -- should break
 CALL getUserLists(1000);
 
-<<<<<<< HEAD
 CALL putList(1, 'Awesomeness', 'work in progress!');
-=======
 CALL putList(2,'INFO1103','Stuff I should have done.');
 -- should break
->>>>>>> 5f383ddb653231bdf52dba1c9dd054c26907c44e
 CALL putList(1000, 'Awesomeness', 'work in progress!');
 
 -- All user table procedures work!
 
 -- build some tasks
-CALL addTask(1, 'Haircut',2,false);
-CALL addTask(2, 'Finish Assignment 3',1,false);
-CALL addTask(2, 'Finish Lab 5',1,false);
+CALL addTask(1, 'Haircut','Shorter, please',2, 1,false);
+CALL addTask(1, 'School','Finish Assignment 3',1, 1,false);
+CALL addTask(1, 'School','Finish Lab 5',1,2,false);
+
+-- rid ourselves of one
+CALL delTask(3);
+-- should break
+CALL delTask(1000);
 
 -- what needs to be done?
 CALL getListTasks(2);
+-- should break
+CALL getListTasks(1000);
 
+-- update list
+CALL putTask(1, 'Hair tonic', 'please grow!',1,false);
+CALL putTask(1000, 'Hair tonic', 'please grow!',1,false);
 -- Make me a collaborator on your list
 CALL addCollaborator(1,2,'R');
 

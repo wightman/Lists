@@ -116,20 +116,37 @@ CALL getUserNames();
 
 ### ```tasks``` table
 
-- `addTask(user, list, task, completed)`
-  - add a task to a user's list
-
-
-- `getTasks(user, list)`
-  - return the set of tasks for a user's list.
-
-
-- `putTask(taskId, task, completed)`
-  - update a task.
+- `addTask(listID, taskName, taskDescription, taskPos, creatorID, completed)`
+  - add a task to a list
+  - Example
+  ```sql
+  CALL addTask(1, 'Haircut','Shorter, please',2, 1,false);
+    ```
+  - on error: `ERROR 1644 (52705): Unable to create the task.`
 
 
 - `delTask(taskId)`
-  - delete a specific task via it's ID.
+  - delete a task
+  ```sql
+  CALL delTask(3);
+    ```
+  - on error: `ERROR 1644 (52705): Task not found.`
+
+
+- `getListTasks(listId)`
+  - return the set of tasks for a user's list.
+  ```sql
+  CALL getListTasks(1);
+    ```
+    - on error: `ERROR 1644 (52704): List not found.
+
+
+- `putTask(taskId, taskName, taskDetail, iPos, completed)`
+  - update a task.
+  ```sql
+  CALL putTask(1, 'Hair tonic', 'please grow!',1,false);
+    ```
+  - on error: `ERROR 1644 (52706): Task not found.`
 
   ### ```collaborators``` table
 

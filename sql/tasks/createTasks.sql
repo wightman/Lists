@@ -3,7 +3,7 @@ CREATE TABLE tasks
     taskId INT NOT NULL AUTO_INCREMENT,
     taskPosition INT NOT NULL DEFAULT 1,
     taskName VARCHAR(255),
-    taskDescription VARCHAR(255),
+    taskDetail VARCHAR(255),
     completed BOOLEAN DEFAULT false,
     listId INT NOT NULL,
     creatorId INT NOT NULL,

@@ -2,13 +2,18 @@ DELIMITER //
 CREATE PROCEDURE addTask
 (
    IN lid INT,
-   IN task VARCHAR(255),
-   IN taskDetail VARCHAR(255),
-   IN taskPos INT,
+   IN tName VARCHAR(255),
+   IN tDetail VARCHAR(255),
+   IN tPos INT,
+   IN cId INT,
    IN done BOOLEAN
 )
 BEGIN
-   INSERT INTO tasks (listId, taskName, taskDescription, taskPosition, completed)
-         VALUES (lid, task, taskDetail, taskPos, done);
+   INSERT INTO tasks (listId, taskName, taskDetail, taskPosition, creatorId,completed)
+         VALUES (lid, tName, tDetail, tPos, cId, done);
+   IF(FOUND_ROWS() = 0) THEN
+     SIGNAL SQLSTATE '52705'
+       SET MESSAGE_TEXT = 'Unable to create the task.';
+   END IF;
 END //
 DELIMITER ;

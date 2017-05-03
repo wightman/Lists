@@ -2,17 +2,21 @@ DELIMITER //
 CREATE PROCEDURE putTask
 (
   IN tId INT,
-  IN task VARCHAR(255),
-  IN taskDetail VARCHAR(255),
-  IN pos INT,
+  IN tName VARCHAR(255),
+  IN tDetail VARCHAR(255),
+  IN tPos INT,
   IN done BOOLEAN
 )
 BEGIN
    UPDATE tasks
       SET  completed = done,
-           taskName = task,
-           taskDescription = taskDetail, 
-           taskPosition = pos
-      WHERE tid = taskId;
+           taskName = tName,
+           taskDetail = tDetail,
+           taskPosition = tPos
+      WHERE tId = taskId;
+    IF(ROW_COUNT() = 0) THEN
+      SIGNAL SQLSTATE '52706'
+        SET MESSAGE_TEXT = 'Task not found.';
+    END IF;
 END //
 DELIMITER ;

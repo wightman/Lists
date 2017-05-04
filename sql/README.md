@@ -150,6 +150,44 @@ CALL getUserNames();
 
   ### ```collaborators``` table
 
+- `addCollaborator(userId, listId, access)`
+  - give a user access to a list
+  ```sql
+  CALL addCollaborator(2,1,'R');
+  ```
+  - on error: `ERROR 1644 (52708): List owner cannot be a collaborator.`
+  - on error: `ERROR 1644 (52707): Unable to create the collaboration.`
+
+
+- `delCollaborator(userId, listId)`
+  - remove user access to a list
+  ```sql
+  CALL delCollaborator(2,1);
+  ```
+  - on error: `ERROR 1644 (52709): Collaboration not found.`
+
+
+- `getCollaborators(listId)`
+  - get users and their access types to a list
+  ```sql
+  CALL delCollaborator(1);
+  ```
+  - on error: `ERROR 1644 (52704): list not found.`
+
+
+- `putCollaborator(userId, listId, access)`
+  - modify user access to a list
+  ```sql
+  CALL putCollaborator(2,1,'W');
+  ```
+  - on error: `ERROR 1644 (52709): Collaboration not found.`
+
+
+- `getAccessTypes();`
+  - get the permitted accessType values
+  ```sql
+  CALL getAccessTypes();
+  ```
 
 ## Tables
 
@@ -219,6 +257,7 @@ taskSince  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 - Collaborators on lists
 - Collaborators (not the user) disappear when lists are deleted.
 - Value in access column *must* be present in the accessType table
+- A user can collaborate once on a list (multiple records not allowed)
 ````sql
   userId INT NOT NULL,
   listId INT NOT NULL,
@@ -232,7 +271,8 @@ taskSince  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     REFERENCES lists(listId)
     ON DELETE CASCADE,
   FOREIGN KEY (access)
-    REFERENCES accessTypes(access)
+  REFERENCES accessTypes(access),
+UNIQUE KEY collaboratorList (userId, listId)
 ````
 
 ### accessTypes

@@ -1,12 +1,24 @@
 DELIMITER //
 CREATE PROCEDURE addCollaborator
 (
-   IN user INT,
-   IN list INT,
+   IN uId INT,
+   IN lId INT,
    IN rw CHAR(1)
 )
 BEGIN
-   INSERT INTO collaborators (userID, listID, access)
-      VALUES (user, list, rw);
+  -- user shouldn't be the list owner
+  SELECT userId
+    FROM lists
+    WHERE listId = lId AND userId = uId;
+  IF(FOUND_ROWS() > 0) THEN
+    SIGNAL SQLSTATE '52708'
+      SET MESSAGE_TEXT = 'List owner cannot be a collaborator.';
+  END IF;
+  INSERT INTO collaborators (userId, listId, access)
+    VALUES (uId, lId, rw);
+  IF(ROW_COUNT() = 0) THEN
+    SIGNAL SQLSTATE '52707'
+      SET MESSAGE_TEXT = 'Unable to create the collaboration.';
+  END IF;
 END //
 DELIMITER ;

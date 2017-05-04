@@ -74,8 +74,30 @@ CALL getListTasks(1000);
 -- update list
 CALL putTask(1, 'Hair tonic', 'please grow!',1,false);
 CALL putTask(1000, 'Hair tonic', 'please grow!',1,false);
--- Make me a collaborator on your list
-CALL addCollaborator(1,2,'R');
 
--- List collaborators, access for a listName
-CALL listCollaborators(2)
+
+-- Make me a collaborator on your list
+CALL addCollaborator(2,1,'R');
+CALL addCollaborator(2,5,'W');
+CALL addCollaborator(1,4,'R');
+-- should break
+CALL addCollaborator(2000,1,'R');
+CALL addCollaborator(2,1000,'R');
+CALL addCollaborator(2,1,'X');
+
+-- remove a collaboration
+CALL delCollaborator(2,1);
+-- should break
+CALL delCollaborator(1000,1);
+
+-- list accessTypes
+CALL getAccessTypes();
+
+-- List collaborators and access for a listName
+CALL getCollaborators(4);
+CALL getCollaborators(1);
+
+-- update a collaboration
+CALL putCollaborator(2,5,'R');
+-- should break
+CALL putCollaborator(2,50,'R');

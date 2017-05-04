@@ -20,5 +20,6 @@ CREATE TABLE collaborators
         REFERENCES lists(listId)
         ON DELETE CASCADE,
     FOREIGN KEY (access)
-        REFERENCES accessTypes(access)
+        REFERENCES accessTypes(access),
+    UNIQUE KEY collaboratorList (userId, listId)
 );

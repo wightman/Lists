@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_restful import reqparse, abort, Api, Resource
 
-from api.resources.users import Users
-from api.resources.user import User
+from resources.users import Users
+from resources.user import User
 
 app = Flask(__name__)
 api = Api(app)

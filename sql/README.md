@@ -11,7 +11,7 @@ Stored procedures are organized primarily by the table/theme they most pertain t
   ```sql
 CALL addUser('You', 'you@example.ca','$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a', true);
 ```
-  - on error: `ERROR 1644 (52701): Unable to add the user.`
+  - on error: `ERROR 1644 (52711): Unable to add the user.`
 
 
 - `delUser(userId)`
@@ -22,7 +22,7 @@ CALL addUser('You', 'you@example.ca','$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5t
   ```sql
 CALL delUser(22);
 ```
-  - on error: `ERROR 1644 (52702): User not found.`
+  - on error: `ERROR 1644 (52710): User not found.`
 
 
 - `getUserNames()`
@@ -39,12 +39,12 @@ CALL getUserNames();
   ```sql
   CALL putUser(22, 'Me', 'me@example.ca');
   ```
-  - on error: `ERROR 1644 (52702): User not found.`
+  - on error: `ERROR 1644 (52710): User not found.`
 
 
 - `putUserAdmin(userId, admin)`
   - set the administration flag for a user (true or false)
-  - on error: `ERROR 1644 (52702): User not found.`
+  - on error: `ERROR 1644 (52710): User not found.`
   - Example:
   ```sql
   CALL putUserAdmin(22, true);
@@ -56,7 +56,7 @@ CALL getUserNames();
   ```sql
   CALL putUserPassword(22, '$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPXXhAc1h5teetXv2lsdI77P3q.5a')
     ```
-  - on error: `ERROR 1644 (52702): User not found.`
+  - on error: `ERROR 1644 (52710): User not found.`
 
 
 - `verifyUser(userEmail, password)`
@@ -77,7 +77,7 @@ CALL getUserNames();
   ```sql
     CALL addList(1,'INFO1103', 'To do before the end of term');
     ```
-  - on error: `ERROR 1644 (52703): Unable to create the list.'
+  - on error: `ERROR 1644 (52721): Unable to create the list.'
 
 
 - `delList(listID)`
@@ -87,7 +87,7 @@ CALL getUserNames();
   ```sql
     CALL delList(2);
     ```
-  - on error: `ERROR 1644 (52704): List not found.
+  - on error: `ERROR 1644 (52720): List not found.
 
 - `getList(listId)`
   - return the list record for a listId. *Note this does not return the set of tasks for the list.*
@@ -95,7 +95,7 @@ CALL getUserNames();
   ```sql
     CALL getList(1);
     ```
-    - on error: `ERROR 1644 (52704): List not found.
+    - on error: `ERROR 1644 (52720): List not found.
 
 - `getUserLists(userId)`
   - return the list name and listId for a user's list record.
@@ -103,7 +103,7 @@ CALL getUserNames();
   ```sql
     CALL getUserLists(2);
     ```
-  - on error: `ERROR 1644 (52702): User not found.`
+  - on error: `ERROR 1644 (52710): User not found.`
 
 
 - `putList(listID, listName, listDescription)`
@@ -112,7 +112,7 @@ CALL getUserNames();
   ```sql
     CALL putList(2,"INFO1103","Stuff I should have done.");
     ```
-  - on error: `ERROR 1644 (52702): User not found.`
+  - on error: `ERROR 1644 (52710): User not found.`
 
 ### ```tasks``` table
 
@@ -122,7 +122,7 @@ CALL getUserNames();
   ```sql
   CALL addTask(1, 'Haircut','Shorter, please',2, 1,false);
     ```
-  - on error: `ERROR 1644 (52705): Unable to create the task.`
+  - on error: `ERROR 1644 (52731): Unable to create the task.`
 
 
 - `delTask(taskId)`
@@ -130,7 +130,7 @@ CALL getUserNames();
   ```sql
   CALL delTask(3);
     ```
-  - on error: `ERROR 1644 (52705): Task not found.`
+  - on error: `ERROR 1644 (52730): Task not found.`
 
 
 - `getListTasks(listId)`
@@ -138,7 +138,7 @@ CALL getUserNames();
   ```sql
   CALL getListTasks(1);
     ```
-    - on error: `ERROR 1644 (52704): List not found.
+    - on error: `ERROR 1644 (52720): List not found.
 
 
 - `putTask(taskId, taskName, taskDetail, iPos, completed)`
@@ -146,7 +146,7 @@ CALL getUserNames();
   ```sql
   CALL putTask(1, 'Hair tonic', 'please grow!',1,false);
     ```
-  - on error: `ERROR 1644 (52706): Task not found.`
+  - on error: `ERROR 1644 (52730): Task not found.`
 
   ### ```collaborators``` table
 
@@ -155,8 +155,8 @@ CALL getUserNames();
   ```sql
   CALL addCollaborator(2,1,'R');
   ```
-  - on error: `ERROR 1644 (52708): List owner cannot be a collaborator.`
-  - on error: `ERROR 1644 (52707): Unable to create the collaboration.`
+  - on error: `ERROR 1644 (52742): List owner cannot be a collaborator.`
+  - on error: `ERROR 1644 (52741): Unable to create the collaboration.`
 
 
 - `delCollaborator(userId, listId)`
@@ -164,7 +164,7 @@ CALL getUserNames();
   ```sql
   CALL delCollaborator(2,1);
   ```
-  - on error: `ERROR 1644 (52709): Collaboration not found.`
+  - on error: `ERROR 1644 (52740): Collaboration not found.`
 
 
 - `getCollaborators(listId)`
@@ -172,7 +172,7 @@ CALL getUserNames();
   ```sql
   CALL delCollaborator(1);
   ```
-  - on error: `ERROR 1644 (52704): list not found.`
+  - on error: `ERROR 1644 (52720): list not found.`
 
 
 - `putCollaborator(userId, listId, access)`
@@ -180,7 +180,7 @@ CALL getUserNames();
   ```sql
   CALL putCollaborator(2,1,'W');
   ```
-  - on error: `ERROR 1644 (52709): Collaboration not found.`
+  - on error: `ERROR 1644 (52740): Collaboration not found.`
 
 
 - `getAccessTypes();`

@@ -15,7 +15,7 @@ BEGIN
            taskPosition = tPos
       WHERE tId = taskId;
     IF(ROW_COUNT() = 0) THEN
-      SIGNAL SQLSTATE '52706'
+      SIGNAL SQLSTATE '52730'
         SET MESSAGE_TEXT = 'Task not found.';
     END IF;
 END //

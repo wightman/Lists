@@ -7,3 +7,5 @@ run the code in
 2. lists/createLists.sql
 3. tasks/createTasks.sql
 4. collaborators/createCollaborators.sql
+
+## Create the stored procedures

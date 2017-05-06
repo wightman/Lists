@@ -9,7 +9,7 @@ BEGIN
      WHERE lid = listId
      ORDER BY taskPosition;
    IF(FOUND_ROWS() = 0) THEN
-     SIGNAL SQLSTATE '52704'
+     SIGNAL SQLSTATE '52730'
        SET MESSAGE_TEXT = 'List not found.';
    END IF;
   END //

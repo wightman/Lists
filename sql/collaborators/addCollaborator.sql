@@ -11,7 +11,7 @@ BEGIN
     FROM lists
     WHERE listId = lId AND userId = uId;
   IF(FOUND_ROWS() > 0) THEN
-    SIGNAL SQLSTATE '52708'
+    SIGNAL SQLSTATE '52742'
       SET MESSAGE_TEXT = 'List owner cannot be a collaborator.';
   END IF;
   INSERT INTO collaborators (userId, listId, access)

@@ -12,7 +12,7 @@ BEGIN
 
    /* Error 52701: Unable to add the user*/
    IF(FOUND_ROWS() = 0) THEN
-     SIGNAL SQLSTATE '52703'
+     SIGNAL SQLSTATE '52721'
        SET MESSAGE_TEXT = 'Unable to create the list.';
    END IF;
 END //

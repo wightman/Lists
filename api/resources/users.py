@@ -1,7 +1,9 @@
-from flask_restful import Resource
-from flask_restful import reqparse
+# -*- coding: utf-8 -*-
+from flask_restful import Resource, reqparse, abort
 import pymysql.cursors
 import jsondate as json
+from urllib.parse import unquote
+import base64
 
 # UserList
 # shows a list of all users, and lets you POST to add new users
@@ -22,27 +24,55 @@ class Users(Resource):
                 print(json.dumps(result))
                 # close the connection
             return json.dumps(result),200
-        except:
-            # failure
-            return '',404
+        except pymysql.MySQLError as e:
+            return abort(404,message=unquote(e.args[1]) )
         finally:
             #close dbConnection
             db.close()
 
     def post(self):
-        #parse user data
-        #if incomplete, problematic, return '',???
-        #if unauthorized, return '', ???
+        sqlProcName = 'addUser'
+        # parse user data
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('name', required=True, help='required')
+        parser.add_argument('email', required=True, help='required')
+        parser.add_argument('passwd', required=True, help='required')
+        parser.add_argument('admin', type=bool)
+        args = parser.parse_args()
+        passwd = base64.standard_b64decode(args['passwd'])
         try:
-            #call createUser(stuff)
-            return 'user create', 201
-        except:
-            return '',500
+            admin
+        except NameError:
+            admin = False
+        try:
+            sqlProcArgs = [args['name'], args['email'], passwd, args['admin'] ]
+        except TypeError as e:
+            abort(400,e.message)
+
+        print("args dict built")
+        print(sqlProcArgs)
+        # open the sql connection and call the stored procedure
+        db = pymysql.connect(host='localhost',
+                            user='wightman',
+                            passwd='JesusL0vesMe!',
+                            db='lists',
+                            charset='utf8',
+                            cursorclass= pymysql.cursors.DictCursor)
+        print("connected")
+        try:
+            with db.cursor() as cursor:
+                print(sqlProcArgs)
+                cursor.callproc(sqlProcName, ['crappy', 'crappy@me.com', '$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a', 0] )
+                cursor.commit()
+                result = cursor.fetchone()
+                print("procedure completed")
+                uri = host + ':' + port + '/users/' + result['userId']
+                print(json.dumps(uri))
+                # close the connection
+            return json.dumps(uri),201
+#        except pymysql.err.InternalError as e:
+        except Exception as e:
+            return abort(500,message=e )
         finally:
-           result= 'This is the end'
-           #close dbConnection
-        #args = parser.parse_args()
-        #todo_id = int(max(TODOS.keys()).lstrip('todo')) + 1
-        #odo_id = 'todo%i' % todo_id
-        #TODOS[todo_id] = {'task': args['task']}
-        #return TODOS[todo_id], 201
+            #close dbConnection
+            db.close()

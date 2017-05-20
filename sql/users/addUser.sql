@@ -10,10 +10,10 @@ BEGIN
    INSERT INTO users (userName, userEmail, userPassword, userAdmin)
       VALUES (uName, uEmail, uPasswd, uAdmin);
 
-    /* Error 52701: Unable to add the user*/
     IF(FOUND_ROWS() = 0) THEN
       SIGNAL SQLSTATE '52711'
         SET MESSAGE_TEXT = 'Unable to create the user.';
     END IF;
+    SELECT userId FROM users WHERE userEmail = uEmail;
 END //
 DELIMITER ;

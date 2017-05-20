@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask_restful import Resource
 from flask_restful import reqparse
 import pymysql.cursors
@@ -8,9 +9,6 @@ import jsondate as json
 class User(Resource):
     def get(self, userId):
         sqlProcName = 'getUser'
-        parser = reqparse.RequestParser()
-        parser.add_argument('userId')
-        print(userId)
         # open the sql connection and call the stored procedure
         db = pymysql.connect(host='localhost',
                             user='wightman',
@@ -25,7 +23,7 @@ class User(Resource):
                 print(json.dumps(result))
                 # close the connection
             return json.dumps(result),200
-        except:
+        except pymysql.MySQLError as e:
             # failure
             return '',404
         finally:

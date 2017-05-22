@@ -1,2 +1,2 @@
 api/settings.py
-resources/settings.api
+api/resources/settings.py

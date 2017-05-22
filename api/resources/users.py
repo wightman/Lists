@@ -52,10 +52,10 @@ class Users(Resource):
         print("args dict built")
         print(sqlProcArgs)
         # open the sql connection and call the stored procedure
-        db = pymysql.connect(host='localhost',
-                            user='wightman',
-                            passwd='JesusL0vesMe!',
-                            db='lists',
+        db = pymysql.connect(settings.DBHOST,
+                            settings.DBUSER,
+                            settings.DBPASSWD,
+                            settings.DBDATABASE,
                             charset='utf8',
                             cursorclass= pymysql.cursors.DictCursor)
         print("connected")

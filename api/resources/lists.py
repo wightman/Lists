@@ -7,11 +7,11 @@ from struct import *
 import settings
 
 
-# UserList
-# shows a list of all users, and lets you POST to add new users
-class Users(Resource):
-    def get(self):
-        sqlProcName = 'getUsersAll'
+# Lists
+# shows all listsfor a user, and lets a user POST to add new lists
+class Lists(Resource):
+    def get(self,userId):
+        sqlProcName = 'getUserLists'
         # open the sql connection and call the stored procedure
         db = pymysql.connect(settings.DBHOST,
                             settings.DBUSER,
@@ -21,7 +21,7 @@ class Users(Resource):
                             cursorclass= pymysql.cursors.DictCursor)
         try:
             with db.cursor() as cursor:
-                cursor.callproc(sqlProcName)
+                cursor.callproc(sqlProcName,[userId])
                 result = cursor.fetchall()
                 print(json.dumps(result))
                 # close the connection
@@ -33,21 +33,16 @@ class Users(Resource):
             db.close()
 
     def post(self):
-        sqlProcName = 'addUser'
+        sqlProcName = 'addList'
         # parse user data
         parser = reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument('name', required=True, help='required')
-        parser.add_argument('email', required=True, help='required')
-        parser.add_argument('passwd', required=True, help='required')
-        parser.add_argument('admin', type=bool)
+        parser.add_argument('userId', type=int,required=True, help='required')
+        parser.add_argument('listName', required=True, help='required')
+        parser.add_argument('listDescription', required=True, help='required')
         args = parser.parse_args()
-        passwd = args['passwd'].encode()
         try:
-            admin
-        except NameError:
-            admin = False
-        try:
-            sqlProcArgs = [args['name'], args['email'], passwd, args['admin'] ]
+            sqlProcArgs = [args['userId'], args['listName'],
+            args['listDescription'] ]
         except TypeError as e:
             abort(400,e.message)
 
@@ -64,12 +59,11 @@ class Users(Resource):
         try:
             with db.cursor() as cursor:
                 print(sqlProcArgs)
-                cursor.callproc(sqlProcName, ['crappy', 'crappy@me.com',
-                   pack('$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a'), 0] )
+                cursor.callproc(sqlProcName, sqlProcArgs)
                 cursor.commit()
                 result = cursor.fetchone()
                 print("procedure completed")
-                uri = host + ':' + port + '/users/' + result['userId']
+                uri = host + ':' + port + '/lists/' + result['listId']
                 print(json.dumps(uri))
                 # close the connection
             return json.dumps(uri),201

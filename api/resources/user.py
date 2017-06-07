@@ -3,6 +3,7 @@ from flask_restful import Resource
 from flask_restful import reqparse
 import pymysql.cursors
 import jsondate as json
+import settings
 
 # Todo
 # shows a single user and lets you delete a user

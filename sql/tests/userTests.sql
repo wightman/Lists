@@ -9,7 +9,7 @@
  */
  CALL addUser('You', 'you@unb.ca','$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a', true);
  /* update an admin status (succeed)*/
- CALL setUserAdmin(1, false);
+ CALL putUserAdmin(1, false);
 
  /* - update an admin status as non-admin (FAIL)  To be done at the application level
  /* update password (succeed) */

@@ -27,21 +27,23 @@ CALL putUserPassword(1,'$FAIL0$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3
 -- should break
 CALL putUserPassword(1000,'$FAIL0$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a');
 
-CALL setUserAdmin(1, false);
+CALL putUserAdmin(1, false);
 -- should break
-CALL setUserAdmin(1000, false);
+CALL putUserAdmin(1000, false);
 
 -- All user table procedures work!
 
 -- build a list
 CALL addList(2, 'Stuff', NULL);
 CALL addList(1,'INFO1103', 'To do before the end of term');
+CALL addList(1, 'Stuff', NULL);
 
-CALL delList(1);
+
+CALL delList(3);
 -- should break
 CALL delList(1000);
 
-CALL getList(1);
+CALL getList(2);
 -- should break
 CALL getList(1000);
 
@@ -57,9 +59,9 @@ CALL putList(1000, 'Awesomeness', 'work in progress!');
 -- All user table procedures work!
 
 -- build some tasks
-CALL addTask(1, 'Haircut','Shorter, please',2, 1,false);
-CALL addTask(1, 'School','Finish Assignment 3',1, 1,false);
-CALL addTask(1, 'School','Finish Lab 5',1,2,false);
+CALL addTask(2, 'Haircut','Shorter, please',2, 1,false);
+CALL addTask(2, 'School','Finish Assignment 3',1, 1,false);
+CALL addTask(2, 'School','Finish Lab 5',1,2,false);
 
 -- rid ourselves of one
 CALL delTask(3);

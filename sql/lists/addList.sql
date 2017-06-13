@@ -11,9 +11,11 @@ BEGIN
         VALUES (uId, lName, lDescription);
 
    /* Error 52701: Unable to add the user*/
-   IF(FOUND_ROWS() = 0) THEN
+   IF(ROW_COUNT() = 0) THEN
      SIGNAL SQLSTATE '52721'
        SET MESSAGE_TEXT = 'Unable to create the list.';
    END IF;
+
+   SELECT LAST_INSERT_ID(); /* Specific to this session */
 END //
 DELIMITER ;

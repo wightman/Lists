@@ -11,9 +11,12 @@ CREATE PROCEDURE addTask
 BEGIN
    INSERT INTO tasks (listId, taskName, taskDetail, taskPosition, creatorId,completed)
          VALUES (lid, tName, tDetail, tPos, cId, done);
-   IF(FOUND_ROWS() = 0) THEN
+  IF(ROW_COUNT() = 0) THEN
      SIGNAL SQLSTATE '52731'
        SET MESSAGE_TEXT = 'Unable to create the task.';
    END IF;
+
+   SELECT LAST_INSERT_ID(); /* Specific to this session */
+
 END //
 DELIMITER ;

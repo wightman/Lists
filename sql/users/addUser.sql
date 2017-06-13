@@ -10,10 +10,12 @@ BEGIN
    INSERT INTO users (userName, userEmail, userPassword, userAdmin)
       VALUES (uName, uEmail, uPasswd, uAdmin);
 
-    IF(FOUND_ROWS() = 0) THEN
+    IF(ROW_COUNT() = 0) THEN
       SIGNAL SQLSTATE '52711'
         SET MESSAGE_TEXT = 'Unable to create the user.';
     END IF;
-    SELECT userId FROM users WHERE userEmail = uEmail;
+
+    SELECT LAST_INSERT_ID(); /* Specific to this session */
+
 END //
 DELIMITER ;

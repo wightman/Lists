@@ -20,5 +20,8 @@ BEGIN
     SIGNAL SQLSTATE '52707'
       SET MESSAGE_TEXT = 'Unable to create the collaboration.';
   END IF;
+
+  SELECT LAST_INSERT_ID(); /* Specific to this session */
+
 END //
 DELIMITER ;

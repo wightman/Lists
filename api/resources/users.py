@@ -17,7 +17,7 @@ class Users(Resource):
                             settings.DBUSER,
                             settings.DBPASSWD,
                             settings.DBDATABASE,
-                            charset='utf8',
+                            charset='utf8mb4',
                             cursorclass= pymysql.cursors.DictCursor)
         try:
             with db.cursor() as cursor:
@@ -58,7 +58,7 @@ class Users(Resource):
                             settings.DBUSER,
                             settings.DBPASSWD,
                             settings.DBDATABASE,
-                            charset='utf8',
+                            charset='utf8mb4',
                             cursorclass= pymysql.cursors.DictCursor)
         print("connected")
         try:

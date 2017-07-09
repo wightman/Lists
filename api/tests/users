@@ -1,4 +1,3 @@
-curl http://lists.hopto.org:61340/users
 curl http://lists.hopto.org:61340/users/1
 curl http://lists.hopto.org:61340/users/10
 

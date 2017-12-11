@@ -21,8 +21,6 @@ class User(Resource):
             with db.cursor() as cursor:
                 cursor.callproc(sqlProcName,[userId])
                 result = cursor.fetchone()
-                print(json.dumps(result))
-                # close the connection
             return json.dumps(result),200
         except pymysql.MySQLError as e:
             # failure
@@ -36,7 +34,7 @@ class User(Resource):
             return 'user delete', 204
             # delUser(userId)
         except:
-            return '', 404#do nothing
+            return '', 404 #do nothing
         finally:
             #close dbConnection
             return '', 204

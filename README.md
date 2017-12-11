@@ -12,7 +12,7 @@ Building on what's gone before, this is a YATDL (**Y** et **A** nother **T** o *
 
 The project has some less than perfect requirements:
 + You need to create the database tables and stored procedures. The initial user will need to be added by hand.
-+ It uses the Flask builtin webserver.
++ Because it's an educational experience it uses the Flask builtin webserver.
 
 ### Technologies
 + The server is made in python3 + restful-flask, communicating in json.

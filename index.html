@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>UNB Computer Science Web Wizards</title>
+	<div id=cssInHeader></div>
+<script>
+		function toggleCSS(){
+			link1 = "<link rel='stylesheet' href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>";
+			script1 = "&ltscript src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js'&gt&lt/script&gt";
+			script2 = "&ltscript src='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'&gt&lt/script&gt";
+			on = document.getElementById("cssOn").checked;
+			cssDiv = document.getElementById("cssInHeader");
+	  		if(on){
+	  			cssDiv.innerHTML = link1;
+	  		}
+	  		else{
+	  			cssDiv.innerHTML = '';
+	  		}
+	  	}
+	</script>
+</head>
+<body>
+	<p>Backups are good. In fact, if I had done that for this page, you'd be seeing 
+	something much more interesting.
+	</p>
+	<form action="">
+		<input title="Toggle CSS on or off" type="checkbox" id="cssOn" value="Bike" onclick="toggleCSS();">Apply CSS<br>
+	</form>
+</body>
+</html>

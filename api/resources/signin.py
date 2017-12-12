@@ -21,15 +21,12 @@ class Signin(Resource):
             abort(400) # bad request
         # Parse the json
         parser = reqparse.RequestParser()
-        print('parser built')
         try:
             # Check for required attributes in json document, create a dictionary
             parser.add_argument('userEmail', type=str, required=True)
             parser.add_argument('password', type=str, required=True)
             request_params = parser.parse_args()
-            print('parser try')
         except:
-            print('parser except')
             abort(400) # bad request
         sqlProcName = 'verifyUser'
         sqlProcArgs = [request_params['userEmail'], request_params['password']]
@@ -43,16 +40,14 @@ class Signin(Resource):
         try:
             cursor = db.cursor()
             cursor.callproc(sqlProcName,sqlProcArgs)
-            print('sqlproc try cursor.callproc')
             response = cursor.fetchone()
+			# At this point we have sucessfully authenticated.
+			session['username'] = request_params['username']
             responseCode = 201
-            print('sqlproc try end')
         except pymysql.MySQLError as e:
-            print('sqlproc except')
             response = {'status': 'Access denied'}
             responseCode = 403
         finally:
-            print('sqlproc finally')
             #close dbConnection
             db.close()
             return make_response(jsonify(response), responseCode)

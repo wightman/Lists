@@ -2,11 +2,7 @@
 from flask import jsonify, abort, request, make_response
 from flask_restful import Resource, reqparse, abort
 import pymysql.cursors
-import jsondate as json
-from urllib.parse import unquote
-from struct import *
 import settings
-
 
 # Create, check and remove signins to the service
 class Signin(Resource):
@@ -41,8 +37,8 @@ class Signin(Resource):
             cursor = db.cursor()
             cursor.callproc(sqlProcName,sqlProcArgs)
             response = cursor.fetchone()
-			# At this point we have sucessfully authenticated.
-			session['username'] = request_params['username']
+            # At this point we have sucessfully authenticated.
+            session['username'] = request_params['username']
             responseCode = 201
         except pymysql.MySQLError as e:
             response = {'status': 'Access denied'}
@@ -54,25 +50,30 @@ class Signin(Resource):
 
 	# GET: Check Cookie data with Session data
 	#
-	# Example curl command:
+    # Example curl command:
 	# curl -i -H "Content-Type: application/json" -X GET -b cookie-jar
-	#	-k https://info3103.cs.unb.ca:61340/signin
-#	def get(self):
-#		if 'username' in session:
-#			response = {'status': 'success'}
-#			responseCode = 200
-#		else:
-#			response = {'status': 'fail'}
-#			responseCode = 403
-
-#		return make_response(jsonify(response), responseCode)
+	#	-k http://lists.hopto.org:61340/signin
+    def get(self):
+        if 'username' in session:
+            response = {'status': 'success'}
+            responseCode = 200
+        else:
+            response = {'status': 'fail'}
+            responseCode = 403
+        return make_response(jsonify(response), responseCode)
 
 	# DELETE: Check Cookie data with Session data
 	#
 	# Example curl command:
 	# curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar
-	#	-k https://info3103.cs.unb.ca:61340/signin
-
-	#
-	#	Here's your chance to shine!
-	#
+	#	-k http://lists.hopto.org:61340/signin
+    def delete(self):
+        if 'username' in session:
+            session.pop('logged_in', None)
+            response = {'status': 'success'}
+            responseCode = 204
+        else:
+            response = {'status': 'fail'}
+            responseCode = 404
+        return make_response(jsonify(response), responseCode)
+# End.

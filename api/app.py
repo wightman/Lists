@@ -38,11 +38,22 @@ app.config['SESSION_COOKIE_DOMAIN'] = settings.APPHOST
 app.permanent_session_lifetime = datetime.timedelta(minutes=60)
 Session(app)
 
+# Return the client application
+class Root(Resource):
+	def get(self):
+		return app.send_static_file('index.html')
+
+# Return the documentation
+class Docs(Resource):
+	def get(self):
+		return app.send_static_file('docs.html')
+
 #
 # Api resource routing: assign objects to endpoints
 #
 api = Api(app)
 api.add_resource(Root, '/')
+api.add_resource(Docs, '/docs')
 api.add_resource(Signin,'/signin')
 api.add_resource(Users, '/users')
 api.add_resource(User, '/users/<userId>')

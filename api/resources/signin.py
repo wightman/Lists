@@ -38,7 +38,8 @@ class Signin(Resource):
             cursor.callproc(sqlProcName,sqlProcArgs)
             response = cursor.fetchone()
             # At this point we have sucessfully authenticated.
-            session['username'] = request_params['username']
+            session['userid'] = request_params['userid']
+            session['admin'] = request_params['admin']
             responseCode = 201
         except pymysql.MySQLError as e:
             response = {'status': 'Access denied'}
@@ -54,7 +55,7 @@ class Signin(Resource):
 	# curl -i -H "Content-Type: application/json" -X GET -b cookie-jar
 	#	-k http://lists.hopto.org:61340/signin
     def get(self):
-        if 'username' in session:
+        if 'userid' in session:
             response = {'status': 'success'}
             responseCode = 200
         else:
@@ -68,7 +69,7 @@ class Signin(Resource):
 	# curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar
 	#	-k http://lists.hopto.org:61340/signin
     def delete(self):
-        if 'username' in session:
+        if 'userid' in session:
             session.pop('logged_in', None)
             response = {'status': 'success'}
             responseCode = 204

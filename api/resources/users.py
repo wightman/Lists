@@ -11,6 +11,11 @@ import settings
 # shows a list of all users, and lets you POST to add new users
 class Users(Resource):
     def get(self):
+        # Not logged in? We're done.
+        if not 'userid' in session:
+            response = {'status': 'fail'}
+            responseCode = 403
+
         sqlProcName = 'getUsersAll'
         # open the sql connection and call the stored procedure
         db = pymysql.connect(settings.DBHOST,
@@ -33,6 +38,11 @@ class Users(Resource):
             db.close()
 
     def post(self):
+        # Not logged in or not admin? We're done.
+        if not 'userid' in session or not 'admin' in session:
+            response = {'status': 'fail'}
+            responseCode = 403
+
         sqlProcName = 'addUser'
         # parse user data
         parser = reqparse.RequestParser(bundle_errors=True)
@@ -42,16 +52,13 @@ class Users(Resource):
         parser.add_argument('admin', type=bool)
         args = parser.parse_args()
         passwd = args['passwd'].encode()
-        try:
-            admin
-        except NameError:
-            admin = False
+        if not 'admin' in args:
+            args['admin'] = False
         try:
             sqlProcArgs = [args['name'], args['email'], passwd, args['admin'] ]
         except TypeError as e:
             abort(400,e.message)
 
-        print("args dict built")
         print(sqlProcArgs)
         # open the sql connection and call the stored procedure
         db = pymysql.connect(settings.DBHOST,
@@ -60,12 +67,10 @@ class Users(Resource):
                             settings.DBDATABASE,
                             charset='utf8mb4',
                             cursorclass= pymysql.cursors.DictCursor)
-        print("connected")
         try:
             with db.cursor() as cursor:
                 print(sqlProcArgs)
-                cursor.callproc(sqlProcName, ['crappy', 'crappy@me.com',
-                   pack('$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a'), 0] )
+                cursor.callproc(sqlProcName, sqlPorcArgs)
                 cursor.commit()
                 result = cursor.fetchone()
                 print("procedure completed")

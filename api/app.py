@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+#
+# Main application for lists.
+#
+# Rick Wightman, Dec 2016 -
+#
+
 from flask import Flask, jsonify, abort, request, make_response, session
 from flask_restful import reqparse, abort, Api, Resource
 from flask_session import Session
@@ -7,7 +13,6 @@ import ssl #include ssl libraries
 import datetime
 
 import settings
-from resources.root import Root
 from resources.users import Users
 from resources.user import User
 from resources.signin import Signin

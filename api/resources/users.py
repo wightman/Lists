@@ -5,16 +5,14 @@ import jsondate as json
 from urllib.parse import unquote
 from struct import *
 import settings
+from decorators import login_required, admin_required
 
 
 # UserList
 # shows a list of all users, and lets you POST to add new users
 class Users(Resource):
+    @login_required
     def get(self):
-        # Not logged in? We're done.
-        if not 'userid' in session:
-            response = {'status': 'fail'}
-            responseCode = 403
 
         sqlProcName = 'getUsersAll'
         # open the sql connection and call the stored procedure
@@ -37,6 +35,7 @@ class Users(Resource):
             #close dbConnection
             db.close()
 
+    @admin_required
     def post(self):
         # Not logged in or not admin? We're done.
         if not 'userid' in session or not 'admin' in session:
@@ -84,3 +83,5 @@ class Users(Resource):
         finally:
             #close dbConnection
             db.close()
+
+# End.

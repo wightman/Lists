@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
 from flask import jsonify, abort, request, make_response
 from flask_restful import Resource, reqparse, abort
+from flask import Flask, session
+from flask_session import Session
 import pymysql.cursors
 import settings
+import decorators
 
 # Create, check and remove signins to the service
 class Signin(Resource):
+#    def __init__(**kwargs):
+#        self.session = kwargs['session']
+
     #
     # Create a signin.
     # Example curl command:
@@ -17,6 +23,8 @@ class Signin(Resource):
             abort(400) # bad request
         # Parse the json
         parser = reqparse.RequestParser()
+        response = {'status': 'Internal Server Error'}
+        responseCode = 500
         try:
             # Check for required attributes in json document, create a dictionary
             parser.add_argument('userEmail', type=str, required=True)
@@ -38,8 +46,9 @@ class Signin(Resource):
             cursor.callproc(sqlProcName,sqlProcArgs)
             response = cursor.fetchone()
             # At this point we have sucessfully authenticated.
-            session['userid'] = request_params['userid']
-            session['admin'] = request_params['admin']
+#            print(response)
+            session['userId'] = response['userId']
+            session['userAdmin'] = response['userAdmin']
             responseCode = 201
         except pymysql.MySQLError as e:
             response = {'status': 'Access denied'}
@@ -54,8 +63,9 @@ class Signin(Resource):
     # Example curl command:
 	# curl -i -H "Content-Type: application/json" -X GET -b cookie-jar
 	#	-k http://lists.hopto.org:61340/signin
+    @login_required
     def get(self):
-        if 'userid' in session:
+        if 'userId' in session:
             response = {'status': 'success'}
             responseCode = 200
         else:

@@ -11,11 +11,7 @@ from flask_session import Session
 from flask_cors import CORS # NEW FOR USING WEB PAGES
 import ssl #include ssl libraries
 import datetime
-
 import settings
-from resources.users import Users
-from resources.user import User
-from resources.signin import Signin
 
 app = Flask(__name__, static_url_path="")
 CORS(app)
@@ -54,12 +50,19 @@ class Docs(Resource):
 		return app.send_static_file('docs.html')
 
 #
+# Delayed imports so they know about the app.
+#
+from resources.users import Users
+from resources.user import User
+from resources.signin import Signin
+#
 # Api resource routing: assign objects to endpoints
 #
 api = Api(app)
 api.add_resource(Root, '/')
 api.add_resource(Docs, '/docs')
 api.add_resource(Signin,'/signin')
+#, resource_class_kwargs={ 'session': session })
 api.add_resource(Users, '/users')
 api.add_resource(User, '/users/<userId>')
 #api.add_resource(UserLists, '/users/<userId>/lists')

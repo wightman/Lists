@@ -35,6 +35,7 @@ class Users(Resource):
             #close dbConnection
             db.close()
 
+    @login_required
     @admin_required
     def post(self):
         # Not logged in or not admin? We're done.

@@ -40,13 +40,9 @@ class Users(Resource):
             #close dbConnection
             db.close()
 
-#    @admin_required
+    @admin_required
     def post(self):
-        # Not logged in or not admin? We're done.
-        if not 'userid' in session or not 'admin' in session:
-            response = {'status': 'fail'}
-            responseCode = 403
-
+        
         sqlProcName = 'addUser'
         # parse user data
         parser = reqparse.RequestParser(bundle_errors=True)

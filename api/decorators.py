@@ -14,7 +14,6 @@ def login_required(func):
             responseCode = 401
             return make_response(jsonify(response), responseCode)
         return func(*args, **kwargs)
-    return function_wrapper
 
 def admin_required(func):
     @wraps(func)
@@ -25,6 +24,5 @@ def admin_required(func):
             responseCode = 403
             return make_response(jsonify(response), responseCode)
         return func(*args, **kwargs)
-    return function_wrapper
 
 # End.

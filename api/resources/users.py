@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
+from flask import jsonify, abort, request, make_response
 from flask_restful import Resource, reqparse, abort
+from flask import Flask, session
+from flask_session import Session
 import pymysql.cursors
+import settings
+from decorators import login_required, admin_required
+
 import jsondate as json
 from urllib.parse import unquote
 from struct import *
-import settings
-from decorators import login_required, admin_required
+
 
 
 # UserList
@@ -35,8 +40,7 @@ class Users(Resource):
             #close dbConnection
             db.close()
 
-    @login_required
-    @admin_required
+#    @admin_required
     def post(self):
         # Not logged in or not admin? We're done.
         if not 'userid' in session or not 'admin' in session:
@@ -68,21 +72,23 @@ class Users(Resource):
                             charset='utf8mb4',
                             cursorclass= pymysql.cursors.DictCursor)
         try:
-            with db.cursor() as cursor:
-                print(sqlProcArgs)
-                cursor.callproc(sqlProcName, sqlPorcArgs)
-                cursor.commit()
-                result = cursor.fetchone()
-                print("procedure completed")
-                uri = host + ':' + port + '/users/' + result['userId']
-                print(json.dumps(uri))
-                # close the connection
-            return json.dumps(uri),201
+            cursor = db.cursor()
+            print(sqlProcArgs)
+            cursor.callproc(sqlProcName, sqlProcArgs)
+            cursor.commit()
+            result = cursor.fetchone()
+            print("procedure completed")
+            uri = host + ':' + port + '/users/' + result['userId']
+            print(json.dumps(uri))
+            # close the connection
+            response = json.dumps(uri)
+            responseCode = 201
 #        except pymysql.err.InternalError as e:
         except Exception as e:
             return abort(500,message=e )
         finally:
             #close dbConnection
             db.close()
+            return make_response(jsonify(response), responseCode)
 
 # End.

@@ -1,5 +1,5 @@
-curl http://lists.hopto.org:61340/users/1
-curl http://lists.hopto.org:61340/users/10
-
-curl -X POST -H "Content-Type: application/json" -d '{"name": "Them", "email": "them@example.ca", "passwd": "$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a", "admin": "true"}'  http://lists.hopto.org:61340/users
-# base64 encoded curl -X POST -H "Content-Type: application/json" -d '{"name": "Them", "email": "them@example.ca", "passwd": "JDJ5JDEwJEd2V1haVU9jNVkxVTEyUUpJNXpqMnV2eUtQd3NoQWMxaDV0ZWV0WHYybHNkSTc3UDNxLjVh", "admin": "true"}'  http://lists.hopto.org:61340/users
+# Create a user as admin
+# Create a user as not
+# Get a list of users while logged in
+# Get a list of users while logged in
+curl -X POST -H "Content-Type: application/json" -d '{"name": "Them", "email": "them@example.ca", "passwd": "$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a", "admin": "true"}'  -b cookie-jar http://lists.hopto.org:61340/users

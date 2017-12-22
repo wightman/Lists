@@ -5,7 +5,7 @@ from flask import Flask, session
 from flask_session import Session
 import pymysql.cursors
 import settings
-import decorators
+from decorators import login_required, admin_required
 
 # Create, check and remove signins to the service
 class Signin(Resource):
@@ -16,7 +16,7 @@ class Signin(Resource):
     # Create a signin.
     # Example curl command:
 	# curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "TheNewYou@example.ca", "password": "$FAIL0$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a"}'
-    #  	 http://lists.hopto.org:61340/signin
+    #  	 -c cookie-jar http://lists.hopto.org:61340/signin
 	#
     def post(self):
         if not request.json:
@@ -63,7 +63,6 @@ class Signin(Resource):
     # Example curl command:
 	# curl -i -H "Content-Type: application/json" -X GET -b cookie-jar
 	#	-k http://lists.hopto.org:61340/signin
-    @login_required
     def get(self):
         if 'userId' in session:
             response = {'status': 'success'}

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from flask import jsonify, abort, request, make_response
+from flask import Flask, session, jsonify, abort, request, make_response, url_for
 from flask_restful import Resource, reqparse, abort
-from flask import Flask, session
 from flask_session import Session
 import pymysql.cursors
 import settings
@@ -18,7 +17,8 @@ from struct import *
 class Users(Resource):
     @login_required
     def get(self):
-
+        response = {'status': 'sql error'}
+        responseCode = 500
         sqlProcName = 'getUsersAll'
         # open the sql connection and call the stored procedure
         db = pymysql.connect(settings.DBHOST,
@@ -28,21 +28,20 @@ class Users(Resource):
                             charset='utf8mb4',
                             cursorclass= pymysql.cursors.DictCursor)
         try:
-            with db.cursor() as cursor:
-                cursor.callproc(sqlProcName)
-                result = cursor.fetchall()
-                print(json.dumps(result))
-                # close the connection
-            return json.dumps(result),200
+            cursor = db.cursor()
+            cursor.callproc(sqlProcName, [])
+            response = cursor.fetchall()
+#            response = json.dumps(result)
+            responseCode = 200
         except pymysql.MySQLError as e:
             return abort(404,message=unquote(e.args[1]) )
         finally:
             #close dbConnection
             db.close()
+            return make_response(jsonify(response), responseCode)
 
     @admin_required
     def post(self):
-        
         sqlProcName = 'addUser'
         # parse user data
         parser = reqparse.RequestParser(bundle_errors=True)
@@ -54,12 +53,10 @@ class Users(Resource):
         passwd = args['passwd'].encode()
         if not 'admin' in args:
             args['admin'] = False
-        try:
-            sqlProcArgs = [args['name'], args['email'], passwd, args['admin'] ]
-        except TypeError as e:
-            abort(400,e.message)
+        sqlProcArgs = [args['name'], args['email'], passwd, args['admin'] ]
 
-        print(sqlProcArgs)
+        response = {'status': 'sql error'}
+        responseCode = 500
         # open the sql connection and call the stored procedure
         db = pymysql.connect(settings.DBHOST,
                             settings.DBUSER,
@@ -69,17 +66,13 @@ class Users(Resource):
                             cursorclass= pymysql.cursors.DictCursor)
         try:
             cursor = db.cursor()
-            print(sqlProcArgs)
             cursor.callproc(sqlProcName, sqlProcArgs)
-            cursor.commit()
+            db.commit()
             result = cursor.fetchone()
-            print("procedure completed")
-            uri = host + ':' + port + '/users/' + result['userId']
-            print(json.dumps(uri))
-            # close the connection
-            response = json.dumps(uri)
+            uri = url_for('users', _external=True)
+            uri = uri + '/' + str(result['LAST_INSERT_ID()'])
+            response = { 'uri' : uri }
             responseCode = 201
-#        except pymysql.err.InternalError as e:
         except Exception as e:
             return abort(500,message=e )
         finally:

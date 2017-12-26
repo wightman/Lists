@@ -3,52 +3,107 @@ The procedures and table definitions for the Lists database.
 ## Stored Procedures
 Stored procedures are organized primarily by the table/theme they most pertain to: users, lists, tasks and collaborators.
 ### ```users``` table
-- `addUser(name, email, passwd, admin)`
-  - add a record to the user table.
-  - name and email are strings
-  - password is a BINARY(60) bcrypt hash of the password
-  - Example
+- `addUser(varchar(255) name, varchar(255) email, binary(60) passwd, boolean admin)`
+  - Add a record to the user table.
+  - Arguments:
+    - name: display name for user
+    - email: unique email address
+    - password: bcrypt password hash
+    - admin:
+      - True for admin users
+      - False for non-admin users
+  - Returns:
+    - userId of the added record
+  - Example:
   ```sql
 CALL addUser('You', 'you@example.ca','$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a', true);
 ```
-  - on error: `ERROR 1644 (52711): Unable to add the user.`
+  - On error:
+  ```sql
+   ERROR 1644 (52711): Unable to add the user.
+  ```
 
+
+- `getUsersAll()`
+  - Returns:
+    - the collection of all users
+  - Example:
+    ```sql
+    CALL getUsersAll();
+    ```
+
+
+- `getUsersByAdmin(boolean admin)`
+  - Find users by display name.
+  - Arguments:
+    - admin:
+      - True for admin users
+      - False for non-admin users
+  - Returns:
+    - collection of users
+  - Example:
+    ```sql
+    CALL getUsersByAdmin(True);
+    ```
+
+
+- `getUsersByName(varchar(255) name)`
+  - Search for users based on display name. The search is case insensitive.
+  - Arguments:
+    - name: a substring of the display name to find
+  - Returns:
+    - collection of users
+  - Example:
+    ```sql
+    CALL getUsersByName('Rick');
+    ```
+
+
+- `getUsersByEmail(varchar(255) email)`
+    - Search for users based on email address. The search is case insensitive.
+      - Arguments:
+        - email: a substring of the email address to find
+      - Returns:
+        - collection of users
+      - Example:
+        ```sql
+        CALL getUsersByEmail('Rick');
+        ```
 
 - `delUser(userId)`
-  - Delete a user
-  - Doesn't care if user doesn't exist
-  - Removes all associated lists, tasks and collaborations
-  - Example
+  - Delete a user. Doesn't just mark it for no-show - it really does.
+  - Removes all associated lists, tasks and collaborations, permanently
+  - Arguments:
+    - userId: the id for the user
+  - Returns:
+    - nothing
+  - Example:
+    ```sql
+    CALL delUser(22);
+    ```
+  - On error:
   ```sql
-CALL delUser(22);
-```
-  - on error: `ERROR 1644 (52710): User not found.`
-
-
-- `getUserNames()`
-  - return a table of usernames
-  - Example
-  ```sql
-CALL getUserNames();
-```
-
-
-- `putUser(userId, userName, userEmail)`
-  - replace values for an existing user.
-  - Example
-  ```sql
-  CALL putUser(22, 'Me', 'me@example.ca');
+  ERROR 1644 (52710): User not found.
   ```
-  - on error: `ERROR 1644 (52710): User not found.`
 
 
-- `putUserAdmin(userId, admin)`
-  - set the administration flag for a user (true or false)
-  - on error: `ERROR 1644 (52710): User not found.`
+- `putUser(userId, name, email, admin)`
+  - Replace values for an existing user.
+  - Arguments:
+    - userId: Id for the user
+    - email: unique email address
+    - admin:
+      - True for admin users
+      - False for non-admin users
   - Example:
   ```sql
-  CALL putUserAdmin(22, true);
+  CALL putUser(22, 'Me', 'me@example.ca', True);
   ```
+  - On error:
+  ```sql
+  ERROR 1644 (52710): User not found.
+  ```
+
 
 - `putUserPassword(userId, password)`
   - set the password for the user.

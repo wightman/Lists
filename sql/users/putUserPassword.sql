@@ -1,4 +1,5 @@
 DELIMITER //
+DROP PROCEDURE IF EXISTS putUserPassword;
 CREATE PROCEDURE putUserPassword
 (
   IN uId INT,

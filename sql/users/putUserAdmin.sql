@@ -1,11 +1,12 @@
 DELIMITER //
+DROP PROCEDURE IF EXISTS putUserAdmin;
 CREATE PROCEDURE putUserAdmin
 (
   IN uId INT,
   IN uAdmin BOOLEAN
 )
 BEGIN
-   UPDATE users
+   UPDATE  users
       SET  userAdmin = uAdmin
       WHERE userId = uId;
 

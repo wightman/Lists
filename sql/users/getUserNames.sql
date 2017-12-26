@@ -1,6 +1,0 @@
-DELIMITER //
-CREATE PROCEDURE getUserNames()
-BEGIN
-   SELECT userName FROM users;
-END //
-DELIMITER ;

@@ -20,17 +20,6 @@ def login_required(func):
         return func(*args, **kwargs)
     return function_wrapper
 
-def owner_required(func):
-    @login_required
-    @wraps(func)
-    def function_wrapper(*args, **kwargs):
-        # Must be the owner user.
-        if userId != session['userId']:
-            response = {'message': 'Owner privileges are required.'}
-            responseCode = 403
-            return make_response(jsonify(response), responseCode)
-        return func(*args, **kwargs)
-    return function_wrapper
 
 def admin_required(func):
     @login_required
@@ -45,15 +34,6 @@ def admin_required(func):
         return func(*args, **kwargs)
     return function_wrapper
 
-def privilege_required(func):
-    @login_required
-    @wraps(func)
-    def function_wrapper(*args, **kwargs):
-        # Must be admin or the owner user
-        if session['userAdmin'] is not True and userId != session['userId']:
-            response = {'message': 'Admin or owner privileges are required.'}
-            responseCode = 403
-        return func(*args, **kwargs)
-    return function_wrapper
+
 
 # End decorators.py

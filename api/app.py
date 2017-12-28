@@ -55,6 +55,7 @@ class Docs(Resource):
 from resources.users import Users
 from resources.user import User
 from resources.signin import Signin
+from resources.admin import Admin
 #
 # Api resource routing: assign objects to endpoints
 #
@@ -62,7 +63,8 @@ api = Api(app)
 api.add_resource(Root, '/')
 api.add_resource(Docs, '/docs')
 api.add_resource(Signin,'/signin')
-#, resource_class_kwargs={ 'session': session })
+api.add_resource(Admin, '/admin/<int:userId>')
+api.add_resource(Password, '/password')
 api.add_resource(Users, '/users')
 api.add_resource(User, '/users/<int:userId>')
 #api.add_resource(UserLists, '/users/<userId>/lists')
@@ -76,4 +78,4 @@ api.add_resource(User, '/users/<int:userId>')
 if __name__ == '__main__':
     app.run(debug=settings.APPDEBUG, host=settings.APPHOST, port=settings.APPPORT)
 
-# End.
+# End app.py

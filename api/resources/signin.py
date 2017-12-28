@@ -33,7 +33,6 @@ class Signin(Resource):
                 required=True, help='user password is required')
             args = parser.parse_args()
         except Exception as e:
-            print('abort 400')
             abort(400, error='unable to parse request') # bad request
         sqlProcName = 'verifyUser'
         sqlProcArgs = [args['userEmail'], args['userPassword'].encode()]

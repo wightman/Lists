@@ -4,7 +4,7 @@ from flask_restful import Resource, reqparse, abort
 from flask_session import Session
 import pymysql.cursors
 import settings
-from decorators import login_required, admin_required, privilege_required, owner_required
+from decorators import login_required, admin_required
 
 import jsondate as json
 from urllib.parse import unquote
@@ -42,8 +42,13 @@ class User(Resource):
             db.close()
             return make_response(jsonify(response), responseCode)
 
-    @privilege_required
+    @login_required
     def delete(self, userId):
+        if userId != session['userId'] and session['userAdmin'] is not True:
+            response = {'message': 'Owner or admin privileges are required.'}
+            responseCode = 403
+            return make_response(jsonify(response), responseCode)
+
         sqlProcName = 'delUser'
         sqlProcArgs = (userId,)
         # open the sql connection and call the stored procedure
@@ -67,8 +72,13 @@ class User(Resource):
             db.close()
             return responseCode
 
-    @owner_required
+    @login_required
     def put(self, userId):
+        if userId != session['userId']:
+            response = {'message': 'Owner privileges are required.'}
+            responseCode = 403
+            return make_response(jsonify(response), responseCode)
+
         # Users can change their own info, except for userAdmin status.
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('userName', type=str, location='json',

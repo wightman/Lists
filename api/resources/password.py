@@ -11,24 +11,23 @@ from pymysql.err import IntegrityError
 #
 # Allows an admin to alter admin status for *another* user
 #
-class Admin(Resource):
+class Password(Resource):
     @admin_required
     def put(self, userId):
-        if userId == session['userId']:
-            response = {'message': 'Admin cannot dimish their own privileges.'}
+        if userId != session['userId']:
+            response = {'message': 'Only user can change their password.'}
             responseCode = 403
             return make_response(jsonify(response), responseCode)
 
         parser = reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument('userAdmin', type=bool, location='args')
+        parser.add_argument('userPassword', type=bool, location='json',
+            required=True, help='User\'s current password is required.')
+        parser.add_argument('newPassword', type=bool, location='json',
+            required=True, help='User\'s new password is required.')
         args = parser.parse_args()
-        if args['userAdmin'] == 1:
-            session['userAdmin'] = True
-        else:
-            session['userAdmin'] = False
 
-        sqlProcName = 'putUserAdmin'
-        sqlProcArgs = (userId, session['userAdmin'],)
+        sqlProcName = 'putUserPassword'
+        sqlProcArgs = (userId, args['userPassword'], args['newPassword'])
 
         # open the sql connection and call the stored procedure
         db = pymysql.connect(settings.DBHOST,
@@ -48,6 +47,4 @@ class Admin(Resource):
             #close dbConnection
             db.close()
             return 204
-
-
-# End admin.py
+# End password.py

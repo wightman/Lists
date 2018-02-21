@@ -1,6 +1,16 @@
 ## ReSTful Endpoint Design for **Lists**
 Can we use the typical stories we tell in designing databases to discover HTTP command/ReSTful endpoint combinations?
 
++ Signin
+  1. created by users with valid credentials (returns token on success)
+    + ```POST /signin```
+  2. Users can sign out (removes token)
+    + ```DELETE /signin```
+
++ Password
+  1. can be changed by logged in users
+    + ```PUT /password```
+
 + Users
   1. are created by administrative users
     + ```POST /users```
@@ -12,12 +22,13 @@ Can we use the typical stories we tell in designing databases to discover HTTP c
   4. are deleted by the user themselves or administrative users
     + ```DELETE /users/<uId>```
 
+**Checkpoint**
 + Lists
   1. created by users, who own them
     + ```POST /users/<uId>/lists```
   2. Users can get details of their lists
     + ```GET /users/<uId>/lists```
-    + ```GET /users/<uId>/lists<lId>```
+    + ```GET /users/<uId>/lists/<lId>```
   3. Users can update their list attributes
     + ```PUT /users/<uId>/lists/<lId>```
   4. deleted by the user that owns them

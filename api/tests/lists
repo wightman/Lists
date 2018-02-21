@@ -1,3 +1,18 @@
+# post list info for a logged in user (should suceed)
+# post list info without being logged in (should fail)
+
+# get list info for a logged in user (should suceed)
+# get list info without being logged in (should fail)
+# get list info for a list belonging to another user (should fail)
+
+# put list info for a logged in user (should suceed)
+# put list info without being logged in (should fail)
+# put list info for a list belonging to another user (should fail)
+
+# delete list info for a logged in user (should suceed)
+# delete list info without being logged in (should fail)
+# delete list info for a list belonging to another user (should fail)
+
 curl http://lists.hopto.org:61340/users/1/lists
 curl -X POST -H "Content-Type: application/json" -d '{"listName": "Summer Vacation", "listDescription": "The vacation things"}'  http://lists.hopto.org:61340/users/1/lists
 curl -X DELETE http://lists.hopto.org:61340/lists/11

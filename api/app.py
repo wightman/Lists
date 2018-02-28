@@ -56,6 +56,7 @@ from resources.users import Users
 from resources.user import User
 from resources.signin import Signin
 from resources.admin import Admin
+from resources.password import Password
 #
 # Api resource routing: assign objects to endpoints
 #

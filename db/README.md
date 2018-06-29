@@ -1,5 +1,5 @@
 # Lists DB Documentation
-The procedures and table definitions for the Lists database.
+The procedures and table definitions for the Lists database, organized according to the Story docuemnt in the main Lists directory.
 ## Stored Procedures
 Stored procedures are organized primarily by the table/theme they most pertain to: users, lists, tasks and collaborators.
 ### ```users``` table

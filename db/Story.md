@@ -1,5 +1,5 @@
-## ReSTful Endpoint Design for **Lists**
-Can we use the typical stories we tell in designing databases to discover HTTP command/ReSTful endpoint combinations?
+## Stored Procedure Support for **Lists**
+This set of stories is derived from the HTTP command/ReSTful endpoint combinations document in the main Lists directory.
 
 + Signin
   1. created by users with valid credentials (returns token on success)
@@ -37,7 +37,7 @@ Can we use the typical stories we tell in designing databases to discover HTTP c
 
 + ListItems
 
-  For the purposes here, a user or collaborator with valid access permissions is termed a contributor.
+  For the purposes here a user or collaborator with valid access permissions is termed a contributor.
 
   1. can be added by a contributor
     + ```POST /users/<uId>/lists/<lId>/items```

@@ -1,11 +1,16 @@
 # Installing the Lists DB
-## Create the database
+## Create the database as root/admin
 ```create database lists;```
+
+## Add a user particular to the database
+```CREATE USER user@'localhost' IDENTIFIED BY password;```
+## Assign the user privileges for the database
+GRANT ALL PRIVILEGES ON lists.* TO user@'localhost';
 ## Create the tables
-run the code in
-1. users/createUsers.sql
-2. lists/createLists.sql
-3. tasks/createTasks.sql
-4. collaborators/createCollaborators.sql
+Run the code in the init directory
+1. createUsers.sql
+2. createLists.sql
+3. createTasks.sql
+4. createCollaborators.sql
 
 ## Create the stored procedures

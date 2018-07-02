@@ -1,7 +1,7 @@
 # Lists DB Documentation
 The procedures and table definitions for the Lists database, organized according to the Story docuemnt in the main Lists directory.
 ## Stored Procedures
-Stored procedures are organized primarily by the table/theme they most pertain to: users, lists, tasks and collaborators.
+Stored procedures are organized primarily by the table/theme they most pertain to: users, lists, items and collaborators.
 ### ```users``` table
 - `addUser(name, email, passwd, admin)`
   - add a record to the user table.
@@ -9,7 +9,11 @@ Stored procedures are organized primarily by the table/theme they most pertain t
   - password is a BINARY(60) bcrypt hash of the password
   - Example
   ```sql
-CALL addUser('You', 'you@example.ca','$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a', true);
+  CALL addUser(
+    'You',
+    'you@example.ca',
+    '$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a'
+    , true);
 ```
   - on error: `ERROR 1644 (52711): Unable to add the user.`
 
@@ -17,10 +21,10 @@ CALL addUser('You', 'you@example.ca','$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5t
 - `delUser(userId)`
   - Delete a user
   - Doesn't care if user doesn't exist
-  - Removes all associated lists, tasks and collaborations
+  - Removes all associated lists, items and collaborations
   - Example
   ```sql
-CALL delUser(22);
+  CALL delUser(22);
 ```
   - on error: `ERROR 1644 (52710): User not found.`
 
@@ -82,7 +86,7 @@ CALL getUserNames();
 
 - `delList(listID)`
   - remove a list
-  - also removes corresponding task items and collaborators
+  - also removes corresponding item items and collaborators
   - Example
   ```sql
     CALL delList(2);
@@ -90,7 +94,7 @@ CALL getUserNames();
   - on error: `ERROR 1644 (52720): List not found.
 
 - `getList(listId)`
-  - return the list record for a listId. *Note this does not return the set of tasks for the list.*
+  - return the list record for a listId. *Note this does not return the set of items for the list.*
   - Example
   ```sql
     CALL getList(1);
@@ -114,39 +118,39 @@ CALL getUserNames();
     ```
   - on error: `ERROR 1644 (52710): User not found.`
 
-### ```tasks``` table
+### ```items``` table
 
-- `addTask(listID, taskName, taskDescription, taskPos, creatorID, completed)`
-  - add a task to a list
+- `addItem(listID, itemName, itemDescription, itemPos, creatorID, completed)`
+  - add a item to a list
   - Example
   ```sql
-  CALL addTask(1, 'Haircut','Shorter, please',2, 1,false);
+  CALL addItem(1, 'Haircut','Shorter, please',2, 1,false);
     ```
-  - on error: `ERROR 1644 (52731): Unable to create the task.`
+  - on error: `ERROR 1644 (52731): Unable to create the item.`
 
 
-- `delTask(taskId)`
-  - delete a task
+- `delItem(itemId)`
+  - delete a item
   ```sql
-  CALL delTask(3);
+  CALL delItem(3);
     ```
-  - on error: `ERROR 1644 (52730): Task not found.`
+  - on error: `ERROR 1644 (52730): item not found.`
 
 
-- `getListTasks(listId)`
-  - return the set of tasks for a user's list.
+- `getListItems(listId)`
+  - return the set of items for a user's list.
   ```sql
-  CALL getListTasks(1);
+  CALL getListItems(1);
     ```
     - on error: `ERROR 1644 (52720): List not found.
 
 
-- `putTask(taskId, taskName, taskDetail, iPos, completed)`
-  - update a task.
+- `putItem(itemId, itemName, itemDetail, iPos, completed)`
+  - update a item.
   ```sql
-  CALL putTask(1, 'Hair tonic', 'please grow!',1,false);
+  CALL putItem(1, 'Hair tonic', 'please grow!',1,false);
     ```
-  - on error: `ERROR 1644 (52730): Task not found.`
+  - on error: `ERROR 1644 (52730): item not found.`
 
   ### ```collaborators``` table
 
@@ -230,25 +234,25 @@ CALL getUserNames();
   UNIQUE KEY listIdName ( userId, listName)
 ````
 
-### tasks
-- Task records make up a list.
-- Tasks have a unique ID and belong to a single list.
-- Tasks have a position/priority. Duplicate values can exist within a list
-- Tasks need not have unique descriptions (task).
-- Tasks are denoted with the userID of their creator (list owner or collaborator)
-- Tasks disappear when lists are deleted.
+### items
+- item records make up a list.
+- items have a unique ID and belong to a single list.
+- items have a position/priority. Duplicate values can exist within a list
+- items need not have unique descriptions (item).
+- items are denoted with the userID of their creator (list owner or collaborator)
+- items disappear when lists are deleted.
 ````sql
-taskId INT NOT NULL AUTO_INCREMENT,
-taskPosition INT NOT NULL DEFAULT 1,
-taskName VARCHAR(255),
-taskDescription VARCHAR(255),
+itemId INT NOT NULL AUTO_INCREMENT,
+itemPosition INT NOT NULL DEFAULT 1,
+itemName VARCHAR(255),
+itemDetail VARCHAR(255),
 completed BOOLEAN DEFAULT false,
 listId INT NOT NULL,
 creatorId INT NOT NULL,
-taskSince  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+itemSince  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-  PRIMARY KEY (taskId),
-  FOREIGN KEY (listId)
+PRIMARY KEY (itemId),
+FOREIGN KEY (listId)
         REFERENCES lists(listId)
         ON DELETE CASCADE
 ````
@@ -277,9 +281,10 @@ UNIQUE KEY collaboratorList (userId, listId)
 
 ### accessTypes
 - List of types of access for collaborators
-- Used to work-around mySQL not supporting CHECK IN constraints
-- Really, the table is populated with two constants: 'R'
- and 'W', so there is no need for write access to the table, ever.
+- Used to work-around mySQL not supporting CHECK IN constraints, but it turns
+out that being able to list the valid domain of values is useful.
+- Really, the table is populated with three constants: 'O', 'R'
+ and 'W', so there is no need for write access to the table.
  ````sql
   access CHAR(1) UNIQUE
 ````

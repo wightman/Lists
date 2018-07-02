@@ -1,13 +1,14 @@
 DELIMITER //
-CREATE PROCEDURE getListTasks
+CREATE PROCEDURE getItem
 (
-  IN lid INT
+  IN lId INT
+  IN iId INT
 )
 BEGIN
    SELECT *
-     FROM tasks
-     WHERE lid = listId
-     ORDER BY taskPosition;
+     FROM items
+     WHERE lId = listId AND iID = itemId
+     ORDER BY itemPosition;
    IF(FOUND_ROWS() = 0) THEN
      SIGNAL SQLSTATE '52730'
        SET MESSAGE_TEXT = 'List not found.';

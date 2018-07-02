@@ -1,5 +1,5 @@
 DELIMITER //
-CREATE PROCEDURE addUserList
+CREATE PROCEDURE addList
 (
    IN uId INT,
    IN lname VARCHAR(255),
@@ -17,5 +17,8 @@ BEGIN
    END IF;
 
    SELECT LAST_INSERT_ID(); /* Specific to this session */
+   /* Need to store this to return it after the next stage of
+      adding a record to the Collaborator table */
+  CALL addCollaborator(uId,lId,'O')
 END //
 DELIMITER ;

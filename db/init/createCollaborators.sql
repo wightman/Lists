@@ -5,6 +5,7 @@ CREATE TABLE accessTypes
 
 INSERT INTO accessTypes (access) VALUES ('R');
 INSERT INTO accessTypes (access) VALUES ('W');
+INSERT INTO accessTypes (access) VALUES ('O');
 
 CREATE TABLE collaborators
 (

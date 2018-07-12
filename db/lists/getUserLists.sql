@@ -4,7 +4,7 @@ CREATE PROCEDURE getUserLists
   IN uId INT
 )
 BEGIN
-   SELECT *
+   SELECT listId
       FROM lists
       WHERE userId = uId;
     IF(FOUND_ROWS() = 0) THEN

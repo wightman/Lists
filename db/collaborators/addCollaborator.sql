@@ -6,14 +6,6 @@ CREATE PROCEDURE addCollaborator
    IN orw CHAR(1)
 )
 BEGIN
-  -- user shouldn't be the list owner
-  SELECT userId
-    FROM lists
-    WHERE listId = lId AND userId = uId;
-  IF(FOUND_ROWS() > 0) THEN
-    SIGNAL SQLSTATE '52742'
-      SET MESSAGE_TEXT = 'List owner cannot be a collaborator.';
-  END IF;
   INSERT INTO collaborators (userId, listId, access)
     VALUES (uId, lId, orw);
   IF(ROW_COUNT() = 0) THEN

@@ -34,8 +34,10 @@ class Signin(Resource):
             args = parser.parse_args()
         except Exception as e:
             abort(400, error='unable to parse request') # bad request
+
         sqlProcName = 'verifyUser'
         sqlProcArgs = [args['userEmail'], args['userPassword'].encode()]
+
         # open the sql connection and call the stored procedure
         db = pymysql.connect(settings.DBHOST,
                             settings.DBUSER,

@@ -4,7 +4,7 @@ from flask_restful import Resource, reqparse, abort
 from flask import Flask, session
 from flask_session import Session
 import pymysql.cursors
-import settings
+import dbSettings
 from decorators import login_required, admin_required
 
 # Create, check and remove signins to the service
@@ -39,12 +39,14 @@ class Signin(Resource):
         sqlProcArgs = [args['userEmail'], args['userPassword'].encode()]
 
         # open the sql connection and call the stored procedure
-        db = pymysql.connect(settings.DBHOST,
-                            settings.DBUSER,
-                            settings.DBPASSWD,
-                            settings.DBDATABASE,
-                            charset='utf8mb4',
-                            cursorclass= pymysql.cursors.DictCursor)
+        db = pymysql.connect(
+            dbSettings.DB_HOST,
+            dbSettings.DB_USER,
+            dbSettings.DB_PASSWD,
+            dbSettings.DB_DATABASE,
+            charset='utf8mb4',
+            cursorclass= pymysql.cursors.DictCursor
+            )
         try:
             cursor = db.cursor()
             cursor.callproc(sqlProcName,sqlProcArgs)

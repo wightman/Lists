@@ -3,11 +3,11 @@
  * Assuming an existing Users table
  */
  /* add a user as admin (succeed)*/
- CALL addUser('You', 'you@unb.ca','$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a', true);
+ CALL addUser('You', 'you@unb.ca','$2y$12$fNRkFdY6UsdRZ3MQgYOgLe6KhJg74Roc2Z3j.VxncdcBhnMiJU0jS', true);
  /* - add a user as non-admin (FAIL) To be done at the application level
  * - add an existing user (FAIL)
  */
- CALL addUser('You', 'you@unb.ca','$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a', true);
+ CALL addUser('You', 'you@unb.ca','$2y$12$fNRkFdY6UsdRZ3MQgYOgLe6KhJg74Roc2Z3j.VxncdcBhnMiJU0jS', true);
  /* update an admin status (succeed)*/
  CALL putUserAdmin(1, false);
 

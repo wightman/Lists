@@ -16,7 +16,7 @@ class Signin(Resource):
 	# curl -i -H "Content-Type: application/json" -X POST -d
     #   '{"userEmail": "TheNewYou@example.ca", "userPassword":
     #   "$FAIL0$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a"}'
-    #  	 -c cookie-jar http://lists.hopto.org:61340/signin
+    #  	 -c cookie-jar https://lists.hopto.org:61340/signin
 	#
     def post(self):
         if not request.json:
@@ -60,7 +60,7 @@ class Signin(Resource):
                 session['userAdmin'] = False
             responseCode = 201
         except pymysql.MySQLError as e:
-            response = {'message': 'Access denied'}
+            response = {'message': 'Can\'t touch this.'}
             responseCode = 403
         finally:
             #close dbConnection
@@ -75,11 +75,11 @@ class Signin(Resource):
     def delete(self):
         if 'userId' in session:
             session.pop('userId', None)
-            response = {'message': 'User logged out.'}
+            response = {'message': 'Logout successful.'}
             responseCode = 204
         else:
             response = {'message': 'Logout failed.'}
             responseCode = 404
         return make_response(jsonify(response), responseCode)
 
-# End signin.py.
+# End signin.py

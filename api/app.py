@@ -35,7 +35,7 @@ def not_found(error):
 app.secret_key = settings.SECRET_KEY
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_COOKIE_NAME'] = 'Lists'
-app.config['SESSION_COOKIE_DOMAIN'] = settings.APPHOST
+app.config['SESSION_COOKIE_DOMAIN'] = settings.APP_HOST
 app.permanent_session_lifetime = datetime.timedelta(minutes=60)
 Session(app)
 
@@ -52,31 +52,38 @@ class Docs(Resource):
 #
 # Delayed imports so they know about the app.
 #
-from resources.users import Users
-from resources.user import User
-from resources.signin import Signin
-from resources.admin import Admin
-from resources.password import Password
+#from resources.users import Users
+#from resources.user import User
+#from resources.signin import Signin
+#from resources.admin import Admin
+#from resources.password import Password
 #
 # Api resource routing: assign objects to endpoints
 #
 api = Api(app)
-api.add_resource(Root, '/')
-api.add_resource(Docs, '/docs')
-api.add_resource(Signin,'/signin')
-api.add_resource(Admin, '/admin/<int:userId>')
-api.add_resource(Password, '/password')
-api.add_resource(Users, '/users')
-api.add_resource(User, '/users/<int:userId>')
+#api.add_resource(Root, '/')
+#api.add_resource(Docs, '/docs')
+#api.add_resource(Signin,'/signin')
+#api.add_resource(Admin, '/admin/<int:userId>')
+#api.add_resource(Password, '/password')
+#api.add_resource(Users, '/users')
+#api.add_resource(User, '/users/<int:userId>')
 #api.add_resource(UserLists, '/users/<userId>/lists')
 #api.add_resource(Lists, '/lists')
 #api.add_resource(List, '/lists/<listId>')
+
+context = ('cert.pem', 'key.pem') # Identify the certificates you've generated.
 
 
 #
 # Run the application
 #
 if __name__ == '__main__':
-    app.run(debug=settings.APPDEBUG, host=settings.APPHOST, port=settings.APPPORT)
+	app.run(
+		host=settings.APP_HOST,
+		port=settings.APP_PORT,
+		ssl_context=context,
+		debug=settings.APP_DEBUG
+	)
 
 # End app.py

@@ -20,11 +20,12 @@ class User(Resource):
         sqlProcArgs = (userId,)
         # open the sql connection and call the stored procedure
         db = pymysql.connect(settings.DBHOST,
-                            settings.DBUSER,
-                            settings.DBPASSWD,
-                            settings.DBDATABASE,
-                            charset='utf8mb4',
-                            cursorclass= pymysql.cursors.DictCursor)
+            settings.DBUSER,
+            settings.DBPASSWD,
+            settings.DBDATABASE,
+            charset='utf8mb4',
+            cursorclass= pymysql.cursors.DictCursor
+        )
         try:
             cursor = db.cursor()
             cursor.callproc(sqlProcName, sqlProcArgs)
@@ -53,11 +54,12 @@ class User(Resource):
         sqlProcArgs = (userId,)
         # open the sql connection and call the stored procedure
         db = pymysql.connect(settings.DBHOST,
-                            settings.DBUSER,
-                            settings.DBPASSWD,
-                            settings.DBDATABASE,
-                            charset='utf8mb4',
-                            cursorclass= pymysql.cursors.DictCursor)
+            settings.DBUSER,
+            settings.DBPASSWD,
+            settings.DBDATABASE,
+            charset='utf8mb4',
+            cursorclass= pymysql.cursors.DictCursor
+        )
         try:
             cursor = db.cursor()
             cursor.callproc(sqlProcName, sqlProcArgs)
@@ -95,11 +97,12 @@ class User(Resource):
         sqlProcArgs = (userId, args['userName'], args['userEmail'])
         # open the sql connection and call the stored procedure
         db = pymysql.connect(settings.DBHOST,
-                            settings.DBUSER,
-                            settings.DBPASSWD,
-                            settings.DBDATABASE,
-                            charset='utf8mb4',
-                            cursorclass= pymysql.cursors.DictCursor)
+            settings.DBUSER,
+            settings.DBPASSWD,
+            settings.DBDATABASE,
+            charset='utf8mb4',
+            cursorclass= pymysql.cursors.DictCursor
+        )
         try:
             cursor = db.cursor()
             cursor.callproc(sqlProcName, sqlProcArgs)

@@ -4,7 +4,7 @@ from flask_restful import reqparse
 from flask import request, url_for, jsonify
 import pymysql.cursors
 import jsondate as json
-import settings
+import dbSettings
 
 # UserList
 # - post: create a new list record and return it's listId
@@ -23,12 +23,14 @@ class UserLists(Resource):
         except NameError:
             listDescription = ""
         # open the sql connection and call the stored procedure
-        dbConnection = pymysql.connect(settings.DBHOST,
-                            settings.DBUSER,
-                            settings.DBPASSWD,
-                            settings.DBDATABASE,
-                            charset='utf8mb4',
-                            cursorclass= pymysql.cursors.DictCursor)
+        dbConnection = pymysql.connect(
+            dbSettings.DB_HOST,
+            dbSettings.DB_USER,
+            dbSettings.DB_PASSWD,
+            dbSettings.DB_DATABASE,
+            charset='utf8mb4',
+            cursorclass= pymysql.cursors.DictCursor
+        )
         try:
             with dbConnection.cursor() as cursor:
                 cursor.callproc(sqlProcName,[userId, listName, listDescription])
@@ -48,12 +50,14 @@ class UserLists(Resource):
     def get(self, userId):
         sqlProcName = 'getUserLists'
         # open the sql connection and call the stored procedure
-        dbConnection = pymysql.connect(settings.DBHOST,
-                            settings.DBUSER,
-                            settings.DBPASSWD,
-                            settings.DBDATABASE,
-                            charset='utf8mb4',
-                            cursorclass= pymysql.cursors.DictCursor)
+        dbConnection = pymysql.connect(
+            dbSettings.DB_HOST,
+            dbSettings.DB_USER,
+            dbSettings.DB_PASSWD,
+            dbSettings.DB_DATABASE,
+            charset='utf8mb4',
+            cursorclass= pymysql.cursors.DictCursor
+        )
         try:
             with dbConnection.cursor() as cursor:
                 cursor.callproc(sqlProcName,[userId])

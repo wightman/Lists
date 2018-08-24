@@ -4,13 +4,13 @@ from flask_restful import reqparse
 from flask import request, url_for, jsonify
 import pymysql.cursors
 import jsondate as json
-import settings
+import dbSettings
 
 # UserList
 # - post: create a new item and return it's list dependent ItemNo
 # - get: return the set of list data for a given userId
 #
-class UserListItems(Resource):
+class ListItems(Resource):
     def post(self, userId, listId):
         sqlProcName = 'addUserList'
         parser = reqparse.RequestParser(bundle_errors=True)
@@ -23,12 +23,14 @@ class UserListItems(Resource):
         except NameError:
             listDescription = ""
         # open the sql connection and call the stored procedure
-        dbConnection = pymysql.connect(settings.DBHOST,
-                            settings.DBUSER,
-                            settings.DBPASSWD,
-                            settings.DBDATABASE,
-                            charset='utf8mb4',
-                            cursorclass= pymysql.cursors.DictCursor)
+        dbConnection = pymysql.connect(
+            dbSettings.DB_HOST,
+            dbSettings.DB_USER,
+            dbSettings.DB_PASSWD,
+            dbSettings.DB_DATABASE,
+            charset='utf8mb4',
+            cursorclass= pymysql.cursors.DictCursor
+        )
         try:
             with dbConnection.cursor() as cursor:
                 cursor.callproc(sqlProcName,[userId, listName, listDescription])
@@ -48,12 +50,14 @@ class UserListItems(Resource):
     def get(self, userId, ListId):
         sqlProcName = 'getUserLists'
         # open the sql connection and call the stored procedure
-        dbConnection = pymysql.connect(settings.DBHOST,
-                            settings.DBUSER,
-                            settings.DBPASSWD,
-                            settings.DBDATABASE,
-                            charset='utf8mb4',
-                            cursorclass= pymysql.cursors.DictCursor)
+        dbConnection = pymysql.connect(
+            dbSettings.DB_HOST,
+            dbSettings.DB_USER,
+            dbSettings.DB_PASSWD,
+            dbSettings.DB_DATABASE,
+            charset='utf8mb4',
+            cursorclass= pymysql.cursors.DictCursor
+        )
         try:
             with dbConnection.cursor() as cursor:
                 cursor.callproc(sqlProcName,[userId])

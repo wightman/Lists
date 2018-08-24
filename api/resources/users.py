@@ -3,7 +3,7 @@ from flask import Flask, session, jsonify, abort, request, make_response, url_fo
 from flask_restful import Resource, reqparse, abort
 from flask_session import Session
 import pymysql.cursors
-import settings
+import dbSettings
 from decorators import login_required, admin_required
 
 import jsondate as json
@@ -38,15 +38,16 @@ class Users(Resource):
             sqlProcName = 'getUsersByEmail'
             sqlProcArgs = (args['userEmail'],)
         # open the sql connection and call the stored procedure
-        db = pymysql.connect(settings.DBHOST,
-            settings.DBUSER,
-            settings.DBPASSWD,
-            settings.DBDATABASE,
+        dbConnection = pymysql.connect(
+            dbSettings.DB_HOST,
+            dbSettings.DB_USER,
+            dbSettings.DB_PASSWD,
+            dbSettings.DB_DATABASE,
             charset='utf8mb4',
             cursorclass= pymysql.cursors.DictCursor
         )
         try:
-            cursor = db.cursor()
+            cursor = dbConnection.cursor()
             cursor.callproc(sqlProcName, sqlProcArgs)
             response = cursor.fetchall()
             responseCode = 200
@@ -55,7 +56,7 @@ class Users(Resource):
             responseCode = 404
         finally:
             #close dbConnection
-            db.close()
+            dbConnection.close()
             return make_response(jsonify(response), responseCode)
 
     @admin_required
@@ -76,17 +77,18 @@ class Users(Resource):
         sqlProcArgs = [args['userName'], args['userEmail'], args['userPassword'], args['userAdmin'] ]
 
         # open the sql connection and call the stored procedure
-        db = pymysql.connect(settings.DBHOST,
-            settings.DBUSER,
-            settings.DBPASSWD,
-            settings.DBDATABASE,
+        dbConnection = pymysql.connect(
+            dbSettings.DB_HOST,
+            dbSettings.DB_USER,
+            dbSettings.DB_PASSWD,
+            dbSettings.DB_DATABASE,
             charset='utf8mb4',
             cursorclass= pymysql.cursors.DictCursor
         )
         try:
-            cursor = db.cursor()
+            cursor = dbConnection.cursor()
             cursor.callproc(sqlProcName, sqlProcArgs)
-            db.commit()
+            dbConnection.commit()
             result = cursor.fetchone()
             uri = url_for('users', _external=True)
             uri = uri + '/' + str(result['LAST_INSERT_ID()'])
@@ -97,7 +99,7 @@ class Users(Resource):
             responseCode = 409
         finally:
             #close dbConnection
-            db.close()
+            dbConnection.close()
             return make_response(jsonify(response), responseCode)
 
 # End users.py

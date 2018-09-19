@@ -1,8 +1,8 @@
 # login user - pass
-curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "TheNewYou@example.ca", "userPassword": "$FAIL0$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a"}' -c cookie-jar http://lists.hopto.org:61340/signin
+curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "you@unb.ca", "userPassword": "$2y$12$fNRkFdY6UsdRZ3MQgYOgLe6KhJg74Roc2Z3j.VxncdcBhnMiJU0jS"}' -k -c cookie-jar https://lists.hopto.org:61340/signin
 
 # login admin user - pass
-curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "me@example.ca", "userPassword": "$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a"}' -c cookie-jar http://lists.hopto.org:61340/signin
+curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "me@example.ca", "userPassword": "$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a"}' -k -c cookie-jar https://lists.hopto.org:61340/signin
 
 # logout user
 curl -i -X DELETE  -b cookie-jar http://lists.hopto.org:61340/signin

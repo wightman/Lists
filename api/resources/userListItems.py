@@ -4,7 +4,7 @@ from flask_restful import reqparse
 from flask import request, url_for, jsonify
 import pymysql.cursors
 import jsondate as json
-import settings
+import dbSettings
 
 # UserList
 # - post: create a new item and return it's list dependent ItemNo

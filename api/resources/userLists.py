@@ -4,7 +4,7 @@ from flask_restful import reqparse
 from flask import request, url_for, jsonify
 import pymysql.cursors
 import jsondate as json
-import settings
+import dbSettings
 
 # UserList
 # - post: create a new list record and return it's listId

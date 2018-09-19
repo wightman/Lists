@@ -3,7 +3,7 @@ from flask import Flask, session, jsonify, abort, request, make_response
 from flask_restful import Resource, reqparse, abort
 from flask_session import Session
 import pymysql.cursors
-import settings
+import dbSettings
 from decorators import admin_required
 
 from pymysql.err import IntegrityError

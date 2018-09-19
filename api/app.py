@@ -11,7 +11,7 @@ from flask_session import Session
 from flask_cors import CORS # NEW FOR USING WEB PAGES
 import ssl #include ssl libraries
 import datetime
-import settings
+import apSettings
 
 app = Flask(__name__, static_url_path="")
 CORS(app)

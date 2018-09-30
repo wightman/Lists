@@ -1,5 +1,6 @@
 # application  level Settings
-APP_HOST = '0.0.0.0'
+APP_HOST = 'lists.hopto.org'
+APP_ADDR = '0.0.0.0'
 APP_PORT =  61340 	# no quotes - it's a number!
 APP_DEBUG = True
 

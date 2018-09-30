@@ -1,0 +1,127 @@
+#%RAML 1.0
+documentation:
+  - title: dbdsbg
+  - content: nf xf 
+  Welcome
+
+login-createRequest
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include examples/loginPut200.json
+      401:
+        description: No recognized username/password combination.
+        body:
+          application/json:
+            example: !include examples/loginPut401.json
+  delete:
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include examples/success.json
+/Users:
+  description: User management
+  post:
+    description: Create a new user
+    body:
+      application/json:
+        type: user-createRequest
+        example: !include examples/user-createRequest.json
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include examples/loginPut200.json
+            type: createResourceResponse
+  get:
+    description: Retrieve a set of users
+    responses:
+      200:
+        body:
+          application/json:
+            type: Users-response
+
+  /{uId}:
+    description: Individual user record access
+
+    get:
+      description: Retrieve a single user record
+      responses:
+        200:
+          body:
+            application/json:
+              type: user-response
+        404:
+          body:
+            application/json:
+              example: !include examples/error.json
+    put:
+      description: Update a single user record - but not the password
+      body:
+        application/json:
+          type: user-createRequest
+      responses:
+        200:
+          body:
+            application/json:
+              type: createResourceResponse
+    delete:
+      description: Delete a single user record
+      responses:
+        204:
+          body:
+            application/json:
+              example: !include examples/error.json
+    /password:
+      description: Change password (requires admin or to be that user)
+      put:
+        body:
+          application/json:
+            type: user-changePassword
+        responses:
+          200:
+            body:
+              application/json:
+                example: !include examples/success.json
+          401:
+            body:
+              application/json:
+                example: !include examples/error.json
+/Lists:
+  description: Manage lists
+  post:
+    description: Create a new list
+    body:
+      application/json:
+        type: list-createRequest
+        example: !include examples/list-createRequest.json
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include examples/loginPut200.json
+            type: createResourceResponse
+  get:
+    description: Retrieve a set of lists
+    responses:
+      200:
+        body:
+          application/json:
+            type: Lists-response
+
+  /{lId}:
+    description: Indivdual list information (not the list's tasks)
+    delete:
+    get:
+    put:
+      description: Update an individual list (not the list's tasks)
+      body:
+        application/json:
+          type: list-createRequest
+      responses:
+        200:
+          body:
+            application/json:
+              type: updateResourceResponse

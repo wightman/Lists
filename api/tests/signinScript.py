@@ -20,7 +20,7 @@ try:
     cursor = db.cursor()
     cursor.callproc(sqlProcName,sqlProcArgs)
     response = cursor.fetchone()
-    cursor.nextset()
+    db.commit()
     # At this point we have sucessfully authenticated.
     responseCode = 201
 except pymysql.err.InternalError  as e:

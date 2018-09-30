@@ -10,7 +10,7 @@ import jsondate as json
 from urllib.parse import unquote
 from struct import *
 from pymysql.err import IntegrityError
-
+from distutils.util import strtobool
 
 
 # UserList
@@ -30,24 +30,25 @@ class Users(Resource):
         sqlProcArgs = ()
         if args['userAdmin'] is not None:
             sqlProcName = 'getUsersByAdmin'
-            sqlProcArgs = (args['userAdmin'],)
+            sqlProcArgs = (strtobool(request.args.get('userAdmin').lower()),)
         elif args['userName'] is not None:
             sqlProcName = 'getUsersByName'
-            sqlProcArgs = (args['userName'],)
+            sqlProcArgs = (request.args.get('userName'),)
         elif args['userEmail'] is not None:
             sqlProcName = 'getUsersByEmail'
-            sqlProcArgs = (args['userEmail'],)
+            sqlProcArgs = (request.args.get('userEmail'),)
         # open the sql connection and call the stored procedure
-        db = pymysql.connect(settings.DBHOST,
-            settings.DBUSER,
-            settings.DBPASSWD,
-            settings.DBDATABASE,
+        db = pymysql.connect(dbSettings.DB_HOST,
+            dbSettings.DB_USER,
+            dbSettings.DB_PASSWD,
+            dbSettings.DB_DATABASE,
             charset='utf8mb4',
             cursorclass= pymysql.cursors.DictCursor
         )
         try:
             cursor = db.cursor()
             cursor.callproc(sqlProcName, sqlProcArgs)
+            db.commit()
             response = cursor.fetchall()
             responseCode = 200
         except Exception as e:
@@ -73,13 +74,13 @@ class Users(Resource):
         args = parser.parse_args()
         if args['userAdmin'] is None:
             args['userAdmin'] = False
-        sqlProcArgs = [args['userName'], args['userEmail'], args['userPassword'], args['userAdmin'] ]
 
+        sqlProcArgs = [args['userName'], args['userEmail'], args['userPassword'], args['userAdmin'] ]
         # open the sql connection and call the stored procedure
-        db = pymysql.connect(settings.DBHOST,
-            settings.DBUSER,
-            settings.DBPASSWD,
-            settings.DBDATABASE,
+        db = pymysql.connect(dbSettings.DB_HOST,
+            dbSettings.DB_USER,
+            dbSettings.DB_PASSWD,
+            dbSettings.DB_DATABASE,
             charset='utf8mb4',
             cursorclass= pymysql.cursors.DictCursor
         )

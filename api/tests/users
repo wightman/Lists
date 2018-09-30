@@ -1,40 +1,74 @@
-# Create a user without login (should fail) - pass
+Test Data
+
+userName        userEmail         userPassword                                                  userAdmin
+------------------------------------------------------------------------------------------------------------
+Rick Wightman   rick@example.com  $2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6  true (Set at db prompt)
+Nancy Clement   nmc@example.com   $2b$10$bVDGlJSRbr3XdvegU3WiH.yijTagQ8HtuVyTOUlmDb0By0vK.6Z9W  false
+Marjorie Hoover read@example.com  $2b$10$ZZP5WEuAfts9R5XW6/hN3.hmlMsc3iJlBYle8JFp.RZo8BDeva5r2  false
+
+############ POST /users
+# Create a user from an admin login (should pass) - **PASS**
+#login:
+curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+# Create the account (should pass) -
+curl -X POST -H "Content-Type: application/json" -d '{"userName": "Nancy Clement", "userEmail":"nmc@example.com", "userPassword" : "$2b$10$bVDGlJSRbr3XdvegU3WiH.yijTagQ8HtuVyTOUlmDb0By0vK.6Z9W","userAdmin": false}'  -b cookie-jar -k https://lists.hopto.org:61340/users
+
+#Create a user with a duplicate email (should fail == pass) - **PASS**
+#login:
+curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+# Create the account (should fail)
+curl -X POST -H "Content-Type: application/json" -d '{"userName": "Nancy Clement", "userEmail":"nmc@example.com", "userPassword" : "$2b$10$bVDGlJSRbr3XdvegU3WiH.yijTagQ8HtuVyTOUlmDb0By0vK.6Z9W","userAdmin": false}'  -b cookie-jar -k https://lists.hopto.org:61340/users
+
+# Create a user without login (should fail == pass) - **PASS**
 # Make use you're logged out!
-curl -X POST -H "Content-Type: application/json" -d '{"userName": "Them", "userEmail": "them@example.ca", "userPasswd": "$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a", "userAdmin": "True"}'  -b cookie-jar http://lists.hopto.org:61340/users
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/signin
+#create the account (should fail)
+curl -X POST -H "Content-Type: application/json" -d '{"userName": "Marjorie Hoover", "userEmail":"read@example.co", "userPassword" : "$2b$10$ZZP5WEuAfts9R5XW6/hN3.hmlMsc3iJlBYle8JFp.RZo8BDeva5r","userAdmin": false}'  -b cookie-jar -k https://lists.hopto.org:61340/users
 
-# Create a user with plain login (should fail) - pass
-curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "TheNewYou@example.ca", "userPassword": "$FAIL0$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a"}' -c cookie-jar http://lists.hopto.org:61340/signin
-curl -X POST -H "Content-Type: application/json" -d '{"userName": "Them", "userEmail": "them@example.ca", "userPasswd": "$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a", "userAdmin": "True"}'  -b cookie-jar http://lists.hopto.org:61340/users
 
-curl -i -X DELETE  -b cookie-jar http://lists.hopto.org:61340/signin
+#Create a user from plain login (should fail == pass) - **PASS**
+#login
+curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "nmc@example.com", "userPassword": "$2b$10$bVDGlJSRbr3XdvegU3WiH.yijTagQ8HtuVyTOUlmDb0By0vK.6Z9W"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+#create the account (should fail) -
+curl -X POST -H "Content-Type: application/json" -d '{"userName": "Marjorie Hoover", "userEmail":"read@example.co", "userPassword" : "$2b$10$ZZP5WEuAfts9R5XW6/hN3.hmlMsc3iJlBYle8JFp.RZo8BDeva5r","userAdmin": false}'  -b cookie-jar -k https://lists.hopto.org:61340/users
 
-# Create a user as admin - pass
-curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "me@example.ca", "userPassword": "$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a"}' -c cookie-jar http://lists.hopto.org:61340/signin
-curl -X POST -H "Content-Type: application/json" -d '{"userName": "Them", "userEmail": "they@example.ca", "userPassword": "$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a", "userAdmin": "True"}'  -b cookie-jar http://lists.hopto.org:61340/users
-
+############ GET /users
 # Get a list of users while not logged in (should fail) - pass
 curl -X GET -H "Content-Type: application/json" http://lists.hopto.org:61340/users
 
-# Get a list of users while logged in - pass
-curl -X GET -H "Content-Type: application/json"  -b cookie-jar http://lists.hopto.org:61340/users
-  - filtered by admin/not - pass
-    curl -X GET -H "Content-Type: application/json"  -b cookie-jar http://lists.hopto.org:61340/users?admin=true
-  - filtered by name (substring) - pass
-    curl -X GET -H "Content-Type: application/json"  -b cookie-jar http://lists.hopto.org:61340/users?name="you"
-  - filtered by email (substring) - pass
-    curl -X GET -H "Content-Type: application/json"  -b cookie-jar http://lists.hopto.org:61340/users?email="ca"
+# Get a list of users while logged in (should pass)
+curl -X GET -H "Content-Type: application/json"  -b cookie-jar -k https://lists.hopto.org:61340/users
+  - filtered by admin/not (case insensitive) - **PASS**
+    curl -X GET -H "Content-Type: application/json"  -b cookie-jar -k https://lists.hopto.org:61340/users?userAdmin=true
+    curl -X GET -H "Content-Type: application/json"  -b cookie-jar -k https://lists.hopto.org:61340/users?userAdmin=False
+  - filtered by name (substring, case insensitive) - **PASS**
+    curl -X GET -H "Content-Type: application/json"  -b cookie-jar -k https://lists.hopto.org:61340/users?userName="ick"
+    curl -X GET -H "Content-Type: application/json"  -b cookie-jar -k https://lists.hopto.org:61340/users?userName="cle"
+  - filtered by email (substring, case insensitive) - **PASS**
+    curl -X GET -H "Content-Type: application/json"  -b cookie-jar -k https://lists.hopto.org:61340/users?userEmail="example.com"
+    curl -X GET -H "Content-Type: application/json"  -b cookie-jar -k https://lists.hopto.org:61340/users?userEmail="rick"
 
-# Get the info for a single user
-curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "me@example.ca", "userPassword": "$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a"}' -c cookie-jar http://lists.hopto.org:61340/signin
-curl -X GET -H "Content-Type: application/json"  -b cookie-jar http://lists.hopto.org:61340/users/1
+############ GET /users/<id>
+# Get the info for a existing single user (no login, should fail == pass) - **PASS**
+# Get the info for a existing single user **PASS**
+# Get the info for a non-existing single user (should fail == pass) - **PASS**
+curl -X GET -H "Content-Type: application/json"  -b cookie-jar -k https://lists.hopto.org:61340/users/7
+curl -X GET -H "Content-Type: application/json"  -b cookie-jar -k https://lists.hopto.org:61340/users/-7
 
-# Delete a user (must be user or admin)
-curl -X DELETE -H "Content-Type: application/json"  -b cookie-jar http://lists.hopto.org:61340/users/34
+############ Update /users/<id>
+# Update user info (only as that user) - **PASS**
+# Update as other user (should fail == pass) - **PASS**
+curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -X PUT -H "Content-Type: application/json" -d '{"userName": "uYou", "userEmail": "uTheNewYou@example.ca"}'  -b cookie-jar -k https://lists.hopto.org:61340/users/18
+# Update as user, not all data (should fail == pass) - **PASS**
+curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "nmc@example.com", "userPassword": "$2b$10$bVDGlJSRbr3XdvegU3WiH.yijTagQ8HtuVyTOUlmDb0By0vK.6Z9W"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -X PUT -H "Content-Type: application/json" -d '{"userName": "Nancy Mary Clement"}'  -b cookie-jar -k https://lists.hopto.org:61340/users/18
+curl -X PUT -H "Content-Type: application/json" -d '{"userName": "Nancy Mary Clement", "userEmail": "nmc@example.com"}'  -b cookie-jar -k https://lists.hopto.org:61340/users/18
+
+############ DELETE /users/<id>
+* User cannot delete themselves.
+# Delete a user (must be user or admin) **PASS**
+curl -X DELETE -H "Content-Type: application/json"  -b cookie-jar -k https://lists.hopto.org:61340/users/34
 # not admin or user
-#bad userId
-curl -X DELETE -H "Content-Type: application/json"  -b cookie-jar http://lists.hopto.org:61340/users/-999
-
-# Update user info (only as that user)
-curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "TheNewYou@example.ca", "userPassword": "$FAIL0$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a"}' -c cookie-jar http://lists.hopto.org:61340/signin
-curl -X PUT -H "Content-Type: application/json" -d '{"userName": "uYou", "userEmail": "uTheNewYou@example.ca"}'  -b cookie-jar http://lists.hopto.org:61340/users/1
-curl -X PUT -H "Content-Type: application/json" -d '{"userName": "You", "userEmail": "TheNewYou@example.ca"}'  -b cookie-jar http://lists.hopto.org:61340/users/1
+# Note: Flask throws a 405 if a -ve userId is used.
+curl -X DELETE -H "Content-Type: application/json"  -b cookie-jar -k https://lists.hopto.org:61340/users/-999

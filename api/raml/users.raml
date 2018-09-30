@@ -1,0 +1,102 @@
+#%RAML 1.0
+title: List Manager
+version: 0.8
+baseUri: http://lists.hopto.org/
+description: API for list management and collaboration
+mediaType: [application/json]
+types:
+  login-createRequest: !include types/login-createRequest.raml
+
+  user-createRequest: !include types/user-createRequest.raml
+  Users-response: !include types/Users-response.raml
+  user-response: !include types/user-response.raml
+  user-changePassword: !include types/user-changePassword.raml
+  user-createResponse:
+/login:
+  description: login management
+  post:
+    description: Establish a login session.
+    body:
+      application/json:
+        example: !include examples/loginCreateRequest.json
+        type: login-createRequest
+    responses:
+      201:
+        body:
+          application/json:
+            example: !include examples/userSuccess.json
+      401:
+        description: No recognized username/password combination.
+  delete:
+    description: Remove a login session.
+    responses:
+      204:
+/Users:
+  description: User management
+  post:
+    description: Create a new user
+    body:
+      application/json:
+        type: user-createRequest
+        example: !include examples/user-createRequest.json
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include examples/userResponse.json
+            type: createResourceResponse
+      403:
+  get:
+    description: Retrieve a set of users
+    responses:
+      200:
+        body:
+          application/json:
+            type: Users-response
+
+  /{uId}:
+    description: Individual user record access
+
+    get:
+      description: Retrieve a single user record
+      responses:
+        200:
+          body:
+            application/json:
+              type: user-response
+        404:
+          body:
+            application/json:
+              example: !include examples/error.json
+    put:
+      description: Update a single user record - but not the password
+      body:
+        application/json:
+          type: user-createRequest
+      responses:
+        200:
+          body:
+            application/json:
+              type: createResourceResponse
+    delete:
+      description: Delete a single user record
+      responses:
+        204:
+          body:
+            application/json:
+              example: !include examples/error.json
+    /password:
+      description: Change password (requires admin or to be that user)
+      put:
+        body:
+          application/json:
+            type: user-changePassword
+        responses:
+          200:
+            body:
+              application/json:
+                example: !include examples/success200.json
+          401:
+            body:
+              application/json:
+                example: !include examples/error.json

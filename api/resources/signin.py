@@ -51,7 +51,7 @@ class Signin(Resource):
             cursor = db.cursor()
             cursor.callproc(sqlProcName,sqlProcArgs)
             response = cursor.fetchone()
-            cursor.nextset()
+            db.commit()
             # At this point we have sucessfully authenticated.
 
             # the db query returns 1 for True and 0 for False for userAdmin.
@@ -62,7 +62,7 @@ class Signin(Resource):
             else:
                 session['userAdmin'] = False
             responseCode = 201
-        except pymysql.err.InternalError as e:
+        except (pymysql.err.InternalError, pymysql.err.DataError) as e:
             response = {'message': e.args[1]}
             responseCode = 403
         finally:
@@ -75,7 +75,7 @@ class Signin(Resource):
 	#
 	# Example curl command:
 	# curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar
-	#	-k http://lists.hopto.org:61340/signin
+	#	-k https://lists.hopto.org:61340/signin
     def delete(self):
         if 'userId' in session:
             session.pop('userId', None)

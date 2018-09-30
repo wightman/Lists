@@ -1,5 +1,7 @@
+# As admin add a user
+curl -i -X POST -d '{"userName": "Lori Wightman, "userEmail":"lori@ightmanfamily.org", "userPassword" : "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6","userAdmin": "False"}' -b cookie-jar -k https://lists.hopto.org:61340/users
+
 # login as admin and remove your own admin status (should fail) - pass
-curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "TheNewYou@example.ca", "userPassword": "$FAIL0$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a"}' -c cookie-jar http://lists.hopto.org:61340/signin
 curl -i -X PUT -d '{"userAdmin": False}' -b cookie-jar http://lists.hopto.org:61340/admin/1
 
 #login as admin alter admin for another user (should succeed) -

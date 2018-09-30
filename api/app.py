@@ -11,7 +11,7 @@ from flask_session import Session
 from flask_cors import CORS # NEW FOR USING WEB PAGES
 import ssl #include ssl libraries
 import datetime
-import apSettings
+import appSettings
 
 app = Flask(__name__, static_url_path="")
 CORS(app)
@@ -28,14 +28,18 @@ def not_found(error):
 def not_found(error):
 	return make_response(jsonify( { 'status': 'Resource not found' } ), 404)
 
+@app.errorhandler(405) # decorators to add to 405 response
+def not_found(error):
+	return make_response(jsonify( { 'status': 'Bad user Id' } ), 405)
+
 #
 # Set Server-side session config: Save sessions in the local app directory.
 # Invalidate login after 60 miutes of inactivity.
 #
-app.secret_key = settings.SECRET_KEY
+app.secret_key = appSettings.SECRET_KEY
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_COOKIE_NAME'] = 'Lists'
-app.config['SESSION_COOKIE_DOMAIN'] = settings.APP_HOST
+app.config['SESSION_COOKIE_DOMAIN'] = appSettings.APP_HOST
 app.permanent_session_lifetime = datetime.timedelta(minutes=60)
 Session(app)
 
@@ -52,9 +56,9 @@ class Docs(Resource):
 #
 # Delayed imports so they know about the app.
 #
-#from resources.users import Users
-#from resources.user import User
-#from resources.signin import Signin
+from resources.users import Users
+from resources.user import User
+from resources.signin import Signin
 #from resources.admin import Admin
 #from resources.password import Password
 #
@@ -63,11 +67,11 @@ class Docs(Resource):
 api = Api(app)
 #api.add_resource(Root, '/')
 #api.add_resource(Docs, '/docs')
-#api.add_resource(Signin,'/signin')
+api.add_resource(Signin,'/signin')
 #api.add_resource(Admin, '/admin/<int:userId>')
 #api.add_resource(Password, '/password')
-#api.add_resource(Users, '/users')
-#api.add_resource(User, '/users/<int:userId>')
+api.add_resource(Users, '/users')
+api.add_resource(User, '/users/<int:userId>')
 #api.add_resource(UserLists, '/users/<userId>/lists')
 #api.add_resource(Lists, '/lists')
 #api.add_resource(List, '/lists/<listId>')
@@ -80,10 +84,10 @@ context = ('cert.pem', 'key.pem') # Identify the certificates you've generated.
 #
 if __name__ == '__main__':
 	app.run(
-		host=settings.APP_HOST,
-		port=settings.APP_PORT,
+		host=appSettings.APP_ADDR,
+		port=appSettings.APP_PORT,
 		ssl_context=context,
-		debug=settings.APP_DEBUG
+		debug=appSettings.APP_DEBUG
 	)
 
 # End app.py

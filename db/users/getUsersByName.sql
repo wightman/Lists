@@ -7,5 +7,5 @@ BEGIN
    SELECT userId, userName, userEmail, userAdmin, userSince
       FROM users
       WHERE userName LIKE  CONCAT('%', uNameFragment,'%');
-END //
+END//
 DELIMITER ;

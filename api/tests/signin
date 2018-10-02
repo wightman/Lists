@@ -1,7 +1,8 @@
-############ POST /signin
-# login user - pass
-curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -k -c cookie-jar https://lists.hopto.org:61340/signin
+# Failed login (should fail == pass) **PASS**
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "rick@example.cm", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
 
-############ DELETE /signin
+# Successful login **PASS**
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+
 # logout user
 curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/signin

@@ -56,10 +56,6 @@ class User(Resource):
             required=True, help='User email address is required.')
         args = parser.parse_args()
 
-        #
-        #
-        print('parsed args')
-        print(args)
         sqlProcName = 'putUser'
         sqlProcArgs = (userId, args['userName'], args['userEmail'])
         # open the sql connection and call the stored procedure
@@ -92,6 +88,7 @@ class User(Resource):
 
         sqlProcName = 'delUser'
         sqlProcArgs = (userId,)
+        print(sqlProcArgs)
         # open the sql connection and call the stored procedure
         db = pymysql.connect(
             dbSettings.DB_HOST,

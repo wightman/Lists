@@ -4,5 +4,5 @@ curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "rick@exam
 # Successful login **PASS**
 curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
 
-# logout user
+# logout user **PASS**
 curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/signin

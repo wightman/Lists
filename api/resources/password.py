@@ -4,18 +4,18 @@ from flask_restful import Resource, reqparse, abort
 from flask_session import Session
 import pymysql.cursors
 import dbSettings
-from decorators import admin_required
+from decorators import login_required
 
 from pymysql.err import IntegrityError
 
 #
-# Allows an admin to alter admin status for *another* user
+# Allows a user to change their password
 #
 class Password(Resource):
-    @admin_required
+    @login_required
     def put(self, userId):
         if userId != session['userId']:
-            response = {'message': 'Only user can change their password.'}
+            response = {'message': 'Only the user can change their password.'}
             responseCode = 403
             return make_response(jsonify(response), responseCode)
 
@@ -42,9 +42,10 @@ class Password(Resource):
             db.commit()
             responseCode = 204
         except Exception as e:
-            abort(404, e.args[1])
+            response = {"status": e.args[1]}
+            responseCode = 404
         finally:
             #close dbConnection
             db.close()
-            return 204
+            return responseCode
 # End password.py

@@ -73,7 +73,8 @@ class User(Resource):
             db.commit()
             responseCode = 204
         except Exception as e:
-            return abort(404,message=unquote(e.args[1]) )
+            response = {"status": e.args[1]}
+            responseCode = 404
         finally:
             #close dbConnection
             db.close()

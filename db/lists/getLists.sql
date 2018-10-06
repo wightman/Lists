@@ -1,8 +1,7 @@
 DELIMITER //
-CREATE PROCEDURE getList
+CREATE PROCEDURE getLists
 (
-  IN uId INT,
-  IN lId INT
+  IN uId INT
 )
 /*  Collaborations identifies all lists that a particular user has access to.
  *  Each list identifies it's owner.
@@ -16,7 +15,6 @@ BEGIN
         users AS U
       WHERE C.listId = L.listId AND
         L.userId = U.userId AND
-        C.userId = uId AND
-        C.listId = lId;
+        C.userId = uId;
 END //
 DELIMITER ;

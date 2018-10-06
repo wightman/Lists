@@ -1,0 +1,39 @@
+###########
+# Rough draft of endpoints for Lists WebAPI
+#
+
+/signin
+- post
+- delete
+
+/password
+- put
+
+#########
+# USERS
+
+/users
+- post
+- get
+
+/users/<uid:int>
+- get
+- put
+- delete
+
+#########
+# LISTS
+# Since users can collaborate on lists (owner, r/w, read-only) this needs to
+# facilitate access to the list metadata for all lists that a user has access to.
+#
+# So hitting these endpoints returns all list collaborations metadata for a
+# user's list(s)
+
+/users/<uid:int>/lists
+- post (becomes owner)
+- get
+
+/users/<uid:int>lists/<lid:int>
+- get
+- put (permission dependent)
+- delete (permission dependent)

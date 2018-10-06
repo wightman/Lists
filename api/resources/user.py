@@ -89,7 +89,6 @@ class User(Resource):
 
         sqlProcName = 'delUser'
         sqlProcArgs = (userId,)
-        print(sqlProcArgs)
         # open the sql connection and call the stored procedure
         db = pymysql.connect(
             dbSettings.DB_HOST,
@@ -103,13 +102,14 @@ class User(Resource):
             cursor = db.cursor()
             cursor.callproc(sqlProcName, sqlProcArgs)
             db.commit()
+            response = ''
             responseCode = 204
         except Exception as e:
-            response = {"status": e.args[1]}
+            response = jsonify({"status": e.args[1]})
             responseCode = 404
         finally:
             #close dbConnection
             db.close()
-            return responseCode
+        return make_response(response, responseCode)
 
 # End user.py

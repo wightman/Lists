@@ -38,13 +38,15 @@ class Admin(Resource):
             cursor = db.cursor()
             cursor.callproc(sqlProcName, sqlProcArgs)
             db.commit()
+            response = ''
             responseCode = 204
         except Exception as e:
-            abort(404, e.args[1])
+            response = jsonify({"status": e.args[1]})
+            responseCode = 404
         finally:
             #close dbConnection
             db.close()
-            return 204
+        return make_response(response, responseCode)
 
 
 # End admin.py

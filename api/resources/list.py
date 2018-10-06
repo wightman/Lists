@@ -12,19 +12,20 @@ from pymysql.err import IntegrityError
 
 # Todo
 # shows a single user and lets you delete a user
-class User(Resource):
+class List(Resource):
     @login_required
     def get(self, userId, listId):
         print('getList')
         sqlProcName = 'getUserList'
         sqlProcArgs = (userId, listId)
         # open the sql connection and call the stored procedure
-        db = pymysql.connect(settings.DBHOST,
-                            settings.DBUSER,
-                            settings.DBPASSWD,
-                            settings.DBDATABASE,
-                            charset='utf8mb4',
-                            cursorclass= pymysql.cursors.DictCursor)
+        db = pymysql.connect(
+            dbSettings.DB_HOST,
+            dbSettings.DB_USER,
+            dbSettings.DB_PASSWD,
+            dbSettings.DB_DATABASE,
+            charset='utf8mb4',
+            cursorclass= pymysql.cursors.DictCursor)
         try:
             cursor = db.cursor()
             cursor.callproc(sqlProcName, sqlProcArgs)

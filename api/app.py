@@ -21,12 +21,17 @@ CORS(app)
 # Error handlers
 #
 @app.errorhandler(400) # decorators to add to 400 response
-def not_found(error):
+def bad_request(error):
 	return make_response(jsonify( { 'status': 'Bad request' } ), 400)
 
 @app.errorhandler(404) # decorators to add to 404 response
 def not_found(error):
 	return make_response(jsonify( { 'status': 'Resource not found' } ), 404)
+
+@app.errorhandler(405) # decorators to add to 405 response
+def method_not_allowed(error):
+	return make_response(jsonify( { 'status': 'The method is not allowed for the requested URL.' } ), 405)
+
 
 #
 # Set Server-side session config: Save sessions in the local app directory.
@@ -52,9 +57,9 @@ class Docs(Resource):
 #
 # Delayed imports so they know about the app.
 #
-#from resources.users import Users
-#from resources.user import User
-#from resources.signin import Signin
+from resources.users import Users
+from resources.user import User
+from resources.signin import Signin
 #from resources.admin import Admin
 from resources.password import Password
 #
@@ -63,11 +68,11 @@ from resources.password import Password
 api = Api(app)
 #api.add_resource(Root, '/')
 #api.add_resource(Docs, '/docs')
-#api.add_resource(Signin,'/signin')
+api.add_resource(Signin,'/signin')
 #api.add_resource(Admin, '/admin/<int:userId>')
 api.add_resource(Password, '/password')
-#api.add_resource(Users, '/users')
-#api.add_resource(User, '/users/<int:userId>')
+api.add_resource(Users, '/users')
+api.add_resource(User, '/users/<int:userId>')
 #api.add_resource(UserLists, '/users/<userId>/lists')
 #api.add_resource(Lists, '/lists')
 #api.add_resource(List, '/lists/<listId>')

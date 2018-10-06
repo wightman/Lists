@@ -13,39 +13,37 @@ from pymysql.err import IntegrityError
 #
 class Password(Resource):
     @login_required
-    def put(self, userId):
-        if userId != session['userId']:
-            response = {'message': 'Only the user can change their password.'}
-            responseCode = 403
-            return make_response(jsonify(response), responseCode)
-
+    def put(self):
+        userId = session['userId']
         parser = reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument('userPassword', type=bool, location='json',
+        parser.add_argument('userPassword', type=str, location='json',
             required=True, help='User\'s current password is required.')
-        parser.add_argument('newPassword', type=bool, location='json',
+        parser.add_argument('newPassword', type=str, location='json',
             required=True, help='User\'s new password is required.')
         args = parser.parse_args()
 
         sqlProcName = 'putUserPassword'
         sqlProcArgs = (userId, args['userPassword'], args['newPassword'])
-
+        print(sqlProcArgs)
         # open the sql connection and call the stored procedure
-        db = pymysql.connect(settings.DBHOST,
-                            settings.DBUSER,
-                            settings.DBPASSWD,
-                            settings.DBDATABASE,
-                            charset='utf8mb4',
-                            cursorclass= pymysql.cursors.DictCursor)
+        db = pymysql.connect(
+            dbSettings.DB_HOST,
+            dbSettings.DB_USER,
+            dbSettings.DB_PASSWD,
+            dbSettings.DB_DATABASE,
+            charset='utf8mb4',
+            cursorclass= pymysql.cursors.DictCursor)
         try:
             cursor = db.cursor()
             cursor.callproc(sqlProcName, sqlProcArgs)
             db.commit()
+            response = ''
             responseCode = 204
         except Exception as e:
-            response = {"status": e.args[1]}
+            response = jsonify({"status": e.args[1]})
             responseCode = 404
         finally:
             #close dbConnection
             db.close()
-            return responseCode
+        return make_response(response, responseCode)
 # End password.py

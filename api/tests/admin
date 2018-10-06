@@ -1,24 +1,18 @@
-# no login, add admin (should fail == pass)
+######
+# /admin/<int:userId>
 
-# plain user, add admin (should fail == pass)
+# attempt alter with no login (failure == pass) **PASS*
+curl -i -X PUT -H "Content-Type: application/json" -d '{"userAdmin": true}' -b cookie-jar -k https://lists.hopto.org:61340/admin/3
 
-# admin user, add admin
+# attempt alter with plain login (failure == pass) **PASS**
+curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "nmc@example.com", "userPassword": "$2b$10$bVDGlJSRbr3XdvegU3WiH.yijTagQ8HtuVyTOUlmDb0By0vK.6Z9W"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X PUT -H "Content-Type: application/json" -d '{"userAdmin": True}' -b cookie-jar -k https://lists.hopto.org:61340/admin/3
 
-# plain user, remove other's admin (should fail == pass)
+# attempt alter with admin login, no/bad json (failure == pass)
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X PUT -H "Content-Type: application/json"  -b cookie-jar -k https://lists.hopto.org:61340/admin/3
+curl -i -X PUT -H "Content-Type: application/json" -d '{"userAdmin": 25}' -b cookie-jar -k https://lists.hopto.org:61340/admin/3
 
-# admin user, remove other's admin
 
-# admin user, remove own admin
-
-
-# login as admin and remove your own admin status (should fail) - pass
-curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "TheNewYou@example.ca", "userPassword": "$FAIL0$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a"}' -c cookie-jar http://lists.hopto.org:61340/signin
-curl -i -X PUT -d '{"userAdmin": False}' -b cookie-jar http://lists.hopto.org:61340/admin/1
-
-#login as admin alter admin for another user (should succeed) -
-curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "me@example.ca", "userPassword": "$2y$10$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a"}' -c cookie-jar http://lists.hopto.org:61340/signin
-curl -i -X PUT -d '{"userAdmin": False}' -b cookie-jar http://lists.hopto.org:61340/admin/2
-
-#login as user and alter admin status  (should fail) -
-curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "TheNewYou@example.ca", "userPassword": "$FAIL0$GvWXZUOc5Y1U12QJI5zj2uvyKPwshAc1h5teetXv2lsdI77P3q.5a"}' -c cookie-jar http://lists.hopto.org:61340/signin
-curl -i -X PUT -d '{"userAdmin": False}' -b cookie-jar http://lists.hopto.org:61340/admin/2
+# attempt alter with admin login **PASS**
+curl -i -X PUT -H "Content-Type: application/json" -d '{"userAdmin": true}' -b cookie-jar -k https://lists.hopto.org:61340/admin/3

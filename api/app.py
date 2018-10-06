@@ -60,7 +60,7 @@ class Docs(Resource):
 from resources.users import Users
 from resources.user import User
 from resources.signin import Signin
-#from resources.admin import Admin
+from resources.admin import Admin
 from resources.password import Password
 #
 # Api resource routing: assign objects to endpoints
@@ -69,7 +69,7 @@ api = Api(app)
 #api.add_resource(Root, '/')
 #api.add_resource(Docs, '/docs')
 api.add_resource(Signin,'/signin')
-#api.add_resource(Admin, '/admin/<int:userId>')
+api.add_resource(Admin, '/admin/<int:userId>')
 api.add_resource(Password, '/password')
 api.add_resource(Users, '/users')
 api.add_resource(User, '/users/<int:userId>')

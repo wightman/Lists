@@ -51,7 +51,7 @@ curl -i -X GET -b cookie-jar -k https://lists.hopto.org:61340/users
   curl -i -X GET -b cookie-jar -k https://lists.hopto.org:61340/users?userAdmin=true
 
 
-############ GET: /user
+############ GET: /users/<int:userId>
 
 # List user with no login (should fail == pass) **PASS**
 curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/signin
@@ -62,7 +62,7 @@ curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "nmc@examp
 curl -i -X GET -b cookie-jar -k https://lists.hopto.org:61340/users/2
 
 
-############ UPDATE: /user
+############ UPDATE: /user/<int:userId>
 
 #### Note: Changing the admin status requires a different criteria
 #### Note: Changing the password should be more controlled

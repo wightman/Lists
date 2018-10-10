@@ -6,24 +6,20 @@ CREATE PROCEDURE addList
    IN lDescription VARCHAR(255)
 )
 BEGIN
-  INSERT INTO lists (userId, listName, listDescription)
-      VALUES (uId, lName, lDescription);
+  DECLARE LastInsertId MEDIUMINT;
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
+  BEGIN
+    ROLLBACK;
+    SIGNAL SQLSTATE '52721'
+      SET MESSAGE_TEXT = 'Unable to create the list.';
+  END;
 
-      /* Error 52721: Unable to create the list*/
-      IF(ROW_COUNT() = 0) THEN
-        SIGNAL SQLSTATE '52721'
-          SET MESSAGE_TEXT = 'Unable to create the list.';
-      END IF;
-    SET @LastInsertId = LAST_INSERT_ID(); /* Specific to this session */
-    /* Need to store this to return it after the next stage of
-      adding a record to the Collaborator table */
-    CALL addCollaborator(uId,@LastInsertId,'O');
-    /* Error 52721: Unable to create the list*/
-    IF(ROW_COUNT() = 0) THEN
-      CALL delList(uId,@LastInsertId);
-      SIGNAL SQLSTATE '52721'
-        SET MESSAGE_TEXT = 'Unable to create the list.';
-    END IF;
-    SELECT @LastInsertId;
+  START TRANSACTION;
+    INSERT INTO lists (listName, listDescription, userId)
+      VALUES (lName, lDescription, uId);
+    SET LastInsertId = LAST_INSERT_ID();
+    CALL addCollaborator(uId,LastInsertId,'O');
+  COMMIT;
+  SELECT LastInsertId;
 END //
 DELIMITER ;

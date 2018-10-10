@@ -1,4 +1,10 @@
-# post list info for a logged in user (should suceed)
+############
+# /user/<int: userId>/lists
+
+# post list info for a logged in user (should succeed)
+curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "nmc@example.com", "userPassword": "$2b$10$bVDGlJSRbr3XdvegU3WiH.yijTagQ8HtuVyTOUlmDb0By0vK.6Z9W"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -X POST -H "Content-Type: application/json" -d '{"listName": "sweaters", "listDescription": "People to knit sweaters for"}'  -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists
+
 # post list info without being logged in (should fail)
 
 # get list info for a logged in user (should suceed)

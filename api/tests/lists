@@ -1,25 +1,90 @@
-############
-# /user/<int: userId>/lists
+userID    listName                listDescription
+------    -----------------------------------------------------------------
+4         Sweaters                People who need them
+1         Trucks                  The search for the perfect truck for Rick
+3         Jam Recipes             Hey these look good!
+3         Summer Vacation Ideas   Places to go
 
-# post list info for a logged in user (should succeed)
-curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "nmc@example.com", "userPassword": "$2b$10$bVDGlJSRbr3XdvegU3WiH.yijTagQ8HtuVyTOUlmDb0By0vK.6Z9W"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+############ POST: /user/<int: userId>/lists
+
+# post list info for a logged in user  **PASS**
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "nmc@example.com", "userPassword": "$2b$10$bVDGlJSRbr3XdvegU3WiH.yijTagQ8HtuVyTOUlmDb0By0vK.6Z9W"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
 curl -X POST -H "Content-Type: application/json" -d '{"listName": "sweaters", "listDescription": "People to knit sweaters for"}'  -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists
+# post a list to another user
+curl -X POST -H "Content-Type: application/json" -d '{"listName": "Trucks", "listDescription": "The search for the perfect truck for Rick"}'  -b cookie-jar -k https://lists.hopto.org:61340/users/1/lists
 
-# post list info without being logged in (should fail)
+# post list info without being logged in (should fail == pass) **PASS**
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/signin
+curl -X POST -H "Content-Type: application/json" -d '{"listName": "heaters", "listDescription": "People to knit sweaters for"}'  -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists
 
-# get list info for a logged in user (should suceed)
-# get list info without being logged in (should fail)
-# get list info for a list belonging to another user (should fail)
+# Create a few more lists
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "read@wightman.ca", "userPassword": "$2b$10$mytchfear8S1J.oEUMH4t.vh2Y16VbquDyN9H6BYxB3cwpUL0q6lO"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -X POST -H "Content-Type: application/json" -d '{"listName": "Jam Recipes", "listDescription": "Hey these look good!"}'  -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists
+curl -X POST -H "Content-Type: application/json" -d '{"listName": "Summer Vacation Ideas", "listDescription": "Places to go"}'  -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists
 
-# put list info for a logged in user (should suceed)
-# put list info without being logged in (should fail)
-# put list info for a list belonging to another user (should fail)
 
-# delete list info for a logged in user (should suceed)
-# delete list info without being logged in (should fail)
-# delete list info for a list belonging to another user (should fail)
+############ GET: /user/<int: userId>/lists
 
-curl http://lists.hopto.org:61340/users/1/lists
-curl -X POST -H "Content-Type: application/json" -d '{"listName": "Summer Vacation", "listDescription": "The vacation things"}'  http://lists.hopto.org:61340/users/1/lists
-curl -X DELETE http://lists.hopto.org:61340/lists/11
-curl -X PUT -H "Content-Type: application/json" -d '{"listName": "Summer Vac", "listDescription": "Vacation things"}'  http://lists.hopto.org:61340/lists/28
+# get list info for a logged in user  **PASS**
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "nmc@example.com", "userPassword": "$2b$10$bVDGlJSRbr3XdvegU3WiH.yijTagQ8HtuVyTOUlmDb0By0vK.6Z9W"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X GET -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists
+
+# get list info without being logged in (should fail == pass) **PASS**
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X GET -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists
+
+# get list info for a list belonging to another user (should fail == pass) **PASS**
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X GET -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists
+# post a list for a user (so we have a couple)
+curl -X POST -H "Content-Type: application/json" -d '{"listName": "Trucks", "listDescription": "The search for the perfect truck for Rick"}'  -b cookie-jar -k https://lists.hopto.org:61340/users/1/lists
+
+# get lists for a user by accessType
+# (only 'O' at present since collaborators isn't functional) **PASS**
+curl -i -X GET -b cookie-jar -k https://lists.hopto.org:61340/users/1/lists?accessType='O'
+
+
+############ GET: /user/<int: userId>/lists/<int: listId>
+
+# Get a list while not logged in (should fail == pass) **PASS**
+curl -i -X GET -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists/27
+
+# Get another user's list - not a collaborator (should fail == pass)
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X GET -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists/27
+
+# Get another user's list as a collaborator
+# Can't do until collaborators is done.
+
+# Get a list as its owner **PASS**
+curl -i -X GET -b cookie-jar -k https://lists.hopto.org:61340/users/1/lists/28
+
+
+############ PUT: /user/<int: userId>/lists/<int: listId>
+
+# put list info without being logged in (should fail == pass) **PASS**
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X PUT -H "Content-Type: application/json"  -d '{"listName": "Trucks", "listDescription": "Possible perfect trucks for Rick"}' -b cookie-jar -k https://lists.hopto.org:61340/users/1/lists/28
+
+# put list info as non-owner (should fail == pass) **PASS**
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "nmc@example.com", "userPassword": "$2b$10$bVDGlJSRbr3XdvegU3WiH.yijTagQ8HtuVyTOUlmDb0By0vK.6Z9W"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X PUT -H "Content-Type: application/json"  -d '{"listName": "Trucks", "listDescription": "Possible perfect trucks for Rick"}' -b cookie-jar -k https://lists.hopto.org:61340/users/1/lists/28
+
+# put list info as a list owner **PASS**
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X PUT -H "Content-Type: application/json"  -d '{"listName": "Trucks", "listDescription": "Possible perfect trucks for Rick"}' -b cookie-jar -k https://lists.hopto.org:61340/users/1/lists/28
+
+
+############ DELETE: /user/<int: userId>/lists/<int: listId>
+
+# delete list info without being logged in (should fail == pass) **PASS**
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/29
+
+# delete list info for a logged in user **PASS**
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "read@wightman.ca", "userPassword": "$2b$10$mytchfear8S1J.oEUMH4t.vh2Y16VbquDyN9H6BYxB3cwpUL0q6lO"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/29
+
+# delete list info for a list belonging to another user (should fail == pass) **PASS**
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/users/1/lists/28

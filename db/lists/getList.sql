@@ -10,7 +10,7 @@ CREATE PROCEDURE getList
 BEGIN
    SELECT U.userId AS 'OwnerId', U.userName AS 'ownerName',
       L.listId, L.listName, L.listDescription, L.listSince,
-      C.access, C.collaborationViewed, C.collaboratorSince
+      C.accessType, C.collaborationViewed, C.collaboratorSince
       FROM lists AS L,
         collaborators AS C,
         users AS U

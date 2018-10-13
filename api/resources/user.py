@@ -71,6 +71,7 @@ class User(Resource):
             cursor = db.cursor()
             cursor.callproc(sqlProcName, sqlProcArgs)
             db.commit()
+            response = ''
             responseCode = 204
         except Exception as e:
             response = {"status": e.args[1]}
@@ -78,7 +79,7 @@ class User(Resource):
         finally:
             #close dbConnection
             db.close()
-            return responseCode
+            return make_response(jsonify(response), responseCode)
 
     @login_required
     def delete(self, userId):

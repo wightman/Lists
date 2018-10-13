@@ -12,15 +12,12 @@ BEGIN
   UPDATE lists
      SET listName = lName,
          listDescription = lDescription
-     FROM lists as L, collaborators AS C
      WHERE
-       C.listId = L.listId AND
        listId = lId AND
-       userID = uId AND
-       access <> 'R';
+       userID = uId;
   IF(ROW_COUNT() = 0) THEN
     SIGNAL SQLSTATE '52720'
-      SET MESSAGE_TEXT = 'Bad list ID or access type.';
+      SET MESSAGE_TEXT = 'List not found.';
   END IF;
 END //
 DELIMITER ;

@@ -96,6 +96,9 @@ class Users(Resource):
         except IntegrityError as e:
             response = {"message": "Tsk. Tsk. Another user has that email address."}
             responseCode = 409
+        except Error as e:
+            response = {"message": e.args[0]"}
+            responseCode = 409
         finally:
             #close dbConnection
             db.close()

@@ -10,14 +10,11 @@ import jsondate as json
 from urllib.parse import unquote
 from pymysql.err import IntegrityError
 
-# Todo
-# shows a single user and lets you delete a user
 class List(Resource):
     @login_required
     def get(self, userId, listId):
-        print('getList')
-        sqlProcName = 'getUserList'
-        sqlProcArgs = (userId, listId)
+        sqlProcName = 'getList'
+        sqlProcArgs = (session['userId'], listId)
         # open the sql connection and call the stored procedure
         db = pymysql.connect(
             dbSettings.DB_HOST,
@@ -29,52 +26,18 @@ class List(Resource):
         try:
             cursor = db.cursor()
             cursor.callproc(sqlProcName, sqlProcArgs)
-            response = cursor.fetchall()
-            if response:
-                responseCode = 200
-            else:
-                response = {"status": "Resource not found."}
-                responseCode = 404
+            response = cursor.fetchone()
+            responseCode = 200
         except Exception as e:
-            response = {"status": e.args[1]}
-            responseCode = 500
-        finally:
-            #close dbConnection
-            db.close()
-            return make_response(jsonify(response), responseCode)
-
-    @login_required
-    def delete(self, userId):
-        if userId != session['userId']:
-            response = {'message': 'Owner privileges are required.'}
-            responseCode = 403
-            return make_response(jsonify(response), responseCode)
-
-        sqlProcName = 'delUser'
-        sqlProcArgs = (userId, listId)
-        # open the sql connection and call the stored procedure
-        db = pymysql.connect(settings.DBHOST,
-                            settings.DBUSER,
-                            settings.DBPASSWD,
-                            settings.DBDATABASE,
-                            charset='utf8mb4',
-                            cursorclass= pymysql.cursors.DictCursor)
-        try:
-            cursor = db.cursor()
-            cursor.callproc(sqlProcName, sqlProcArgs)
-            db.commit()
-            response = cursor.fetchall()
-            responseCode = 204
-        except Exception as e:
-            response = {"status": e.args[1]}
+            response = {"status":  "Resource not found."}
             responseCode = 404
         finally:
             #close dbConnection
             db.close()
-            return responseCode
+            return make_response(jsonify(response), responseCode)
 
     @login_required
-    def put(self, userId):
+    def put(self, userId, listId):
         if userId != session['userId']:
             response = {'message': 'Owner privileges are required.'}
             responseCode = 403
@@ -87,30 +50,59 @@ class List(Resource):
         parser.add_argument('listDescription', type=str, location='json',
             required=True, help='Description for the list is required.')
         args = parser.parse_args()
-
-        #
-        #
-        print('parsed args')
-        print(args)
         sqlProcName = 'putList'
-        sqlProcArgs = (listId, args['listName'], args['listDescription'])
+        sqlProcArgs = (userId, listId, args['listName'], args['listDescription'])
         # open the sql connection and call the stored procedure
-        db = pymysql.connect(settings.DBHOST,
-                            settings.DBUSER,
-                            settings.DBPASSWD,
-                            settings.DBDATABASE,
-                            charset='utf8mb4',
-                            cursorclass= pymysql.cursors.DictCursor)
+        db = pymysql.connect(
+            dbSettings.DB_HOST,
+            dbSettings.DB_USER,
+            dbSettings.DB_PASSWD,
+            dbSettings.DB_DATABASE,
+            charset='utf8mb4',
+            cursorclass= pymysql.cursors.DictCursor)
         try:
             cursor = db.cursor()
             cursor.callproc(sqlProcName, sqlProcArgs)
             db.commit()
+            response = ''
             responseCode = 204
         except Exception as e:
-            return abort(404,message=unquote(e.args[1]) )
+            response = {"status": e.args[1]}
+            responseCode = 404
         finally:
             #close dbConnection
             db.close()
-            return responseCode
+            return make_response(jsonify(response), responseCode)
+
+    @login_required
+    def delete(self, userId, listId):
+        if userId != session['userId']:
+            response = {'message': 'Owner privileges are required.'}
+            responseCode = 403
+            return make_response(jsonify(response), responseCode)
+
+        sqlProcName = 'delList'
+        sqlProcArgs = (userId, listId)
+        # open the sql connection and call the stored procedure
+        db = pymysql.connect(
+            dbSettings.DB_HOST,
+            dbSettings.DB_USER,
+            dbSettings.DB_PASSWD,
+            dbSettings.DB_DATABASE,
+            charset='utf8mb4',
+            cursorclass= pymysql.cursors.DictCursor)
+        try:
+            cursor = db.cursor()
+            cursor.callproc(sqlProcName, sqlProcArgs)
+            db.commit()
+            response = ''
+            responseCode = 204
+        except Exception as e:
+            response = {"status": e.args[1]}
+            responseCode = 404
+        finally:
+            #close dbConnection
+            db.close()
+            return make_response(jsonify(response), responseCode)
 
 # End list.py

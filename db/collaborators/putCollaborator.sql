@@ -7,7 +7,7 @@ CREATE PROCEDURE putCollaborator
 )
 BEGIN
   UPDATE collaborators
-    SET  access = rw
+    SET  accessType = rw
     WHERE userId = uId AND listId = lId;
   IF(ROW_COUNT() = 0) THEN
     SIGNAL SQLSTATE '52740'

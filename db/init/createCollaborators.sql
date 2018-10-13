@@ -11,7 +11,7 @@ CREATE TABLE collaborators
 (
     userId INT NOT NULL,
     listId INT NOT NULL,
-    access CHAR(1) NOT NULL,
+    accessType CHAR(1) NOT NULL,
     collaborationViewed BOOLEAN DEFAULT FALSE,
     collaboratorSince TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 

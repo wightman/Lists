@@ -4,7 +4,7 @@ CREATE PROCEDURE getCollaborators
    IN lId INT
 )
 BEGIN
-  SELECT userID as collaboratorID, access
+  SELECT userID as collaboratorID, accessType
     FROM collaborators
     WHERE listId = lId;
   IF(FOUND_ROWS() = 0) THEN

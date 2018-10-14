@@ -1,0 +1,31 @@
+###########
+# TEST DATA
+
+userID    listName                listDescription
+------    -----------------------------------------------------------------
+4         Sweaters                People who need them
+1         Trucks                  The search for the perfect truck for Rick
+3         Jam Recipes             Hey these look good!
+3         Summer Vacation Ideas   Places to go
+
+############ POST: /user/<int: userId>/lists/<int: listId>/collaborators
+# Users who own a list should be able to add collaborators and accessType to a list.
+
+
+############ GET: /user/<int: userId>/lists/<int: listId>/collaborators
+# All collaborators should be able to see the collaborators on a list and
+# their accessTypes
+
+
+############ GET: /user/<int: userId>/lists/<int: listId>/collaborators/<int: userId>
+# All collaborators should be able to see a collaborators on a list and
+# their accessTypes
+
+
+############ PUT: /user/<int: userId>/lists/<int: listId>/items/<int: itemId>
+# A list owner should be able to update a collaborator's accessType for a list.
+
+
+############ DELETE: /user/<int: userId>/lists/<int: listId>/items/<int: itemId>
+# A list owner should be able to delete a collaborator from a list. Note that
+# list items added by that collaborator are not removed.

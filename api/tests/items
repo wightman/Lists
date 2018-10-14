@@ -1,0 +1,31 @@
+###########
+# TEST DATA
+
+userID    listName                listDescription
+------    -----------------------------------------------------------------
+4         Sweaters                People who need them
+1         Trucks                  The search for the perfect truck for Rick
+3         Jam Recipes             Hey these look good!
+3         Summer Vacation Ideas   Places to go
+
+############ POST: /user/<int: userId>/lists/<int: listId>/items
+# Users who either own a list or have write access should be able to post
+# an item to a list.
+
+
+############ GET: /user/<int: userId>/lists/<int: listId>/items
+# All collaborators should be able to retrieve items in a list.
+
+
+############ GET: /user/<int: userId>/lists/<int: listId>/items/<int: itemId>
+# All collaborators should be able to retrieve an item in a list.
+
+
+############ PUT: /user/<int: userId>/lists/<int: listId>/items/<int: itemId>
+# Users who either own a list or have write access should be able to update
+# an item in a list.
+
+
+############ DELETE: /user/<int: userId>/lists/<int: listId>/items/<int: itemId>
+# Users who either own a list or have write access should be able to delete
+# an item from a list.

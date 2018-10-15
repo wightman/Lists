@@ -26,7 +26,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"userName": "Marjorie Hoov
 # We may need a third user, so get 'er done
 curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/signin
 curl -i -H "Content-Type: application/json" -X POST -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
-curl -X POST -H "Content-Type: application/json" -d '{"userName": "Marjorie Hoover", "userEmail": "read@wightman.ca", "userPassword": "$2b$10$mytchfear8S1J.oEUMH4t.vh2Y16VbquDyN9H6BYxB3cwpUL0q6lO", "userAdmin": false}'  -b cookie-jar -k https://lists.hopto.org:61340/users
+
 
 ############ GET: /users
 
@@ -62,7 +62,7 @@ curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "nmc@examp
 curl -i -X GET -b cookie-jar -k https://lists.hopto.org:61340/users/2
 
 
-############ UPDATE: /user/<int:userId>
+############ PUT: /user/<int:userId>
 
 #### Note: Changing the admin status requires a different criteria
 #### Note: Changing the password should be more controlled

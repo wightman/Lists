@@ -1,31 +1,93 @@
 ###########
 # TEST DATA
 
-userID    listName                listDescription
-------    -----------------------------------------------------------------
-4         Sweaters                People who need them
-1         Trucks                  The search for the perfect truck for Rick
-3         Jam Recipes             Hey these look good!
-3         Summer Vacation Ideas   Places to go
+listId  ownerID  CoopId  accessType  listName
+------  ------   ------  ----------  -----------
+  27      4            3       w         Sweaters
+  28      1            4       r         Trucks
+  30      3            4       w         Summer Vacation Ideas
+  30      3            1       r         Summer Vacation Ideas
 
 ############ POST: /user/<int: userId>/lists/<int: listId>/collaborators
-# Users who own a list should be able to add collaborators and accessType to a list.
 
+# Users who own a list should be able to add collaborators and accessType to a list. **PASS*
+# login 4
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "nmc@example.com", "userPassword": "$2b$10$bVDGlJSRbr3XdvegU3WiH.yijTagQ8HtuVyTOUlmDb0By0vK.6Z9W"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+# add 3 with write access to list 27
+curl -i -X POST -H "Content-Type: application/json"  -d '{"collaboratorId": 3, "listId": 27, "accessType": "w"}' -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists/27/collaborators
+
+# Users who  are non-contributors should not be able to add contributors **PASS**
+# add 3 to list 28 with any access (should fail == pass)
+curl -i -X POST -H "Content-Type: application/json"  -d '{"collaboratorId": 1, "listId": 30, "accessType": "w"}' -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/collaborators
+
+# Users who do are a non-owner contributor should not be able to add contributors
+# As user 3 add 4 to list 27 with any access (should fail == pass) **PASS**
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "read@wightman.ca", "userPassword": "$2b$10$mytchfear8S1J.oEUMH4t.vh2Y16VbquDyN9H6BYxB3cwpUL0q6lO"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X POST -H "Content-Type: application/json"  -d '{"collaboratorId": 3, "accessType": "w"}' -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists/27/collaborators
+
+# Posting to a bad ownerId/listID (should fail == pass)
+curl -i -X POST -H "Content-Type: application/json"  -d '{"collaboratorId": 3, "accessType": "w"}' -b cookie-jar -k https://lists.hopto.org:61340/users/1/lists/30/collaborators
+
+
+# Fill in some other contributors
+# login 1
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+# add 4 as 'r' to list 28
+curl -i -X POST -H "Content-Type: application/json"  -d '{"collaboratorId": 4, "accessType": "w"}' -b cookie-jar -k https://lists.hopto.org:61340/users/1/lists/28/collaborators
+
+# login 3
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "read@wightman.ca", "userPassword": "$2b$10$mytchfear8S1J.oEUMH4t.vh2Y16VbquDyN9H6BYxB3cwpUL0q6lO"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+# add 4 as 'w' to list 30
+curl -i -X POST -H "Content-Type: application/json"  -d '{"collaboratorId": 4, "accessType": "w"}' -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/collaborators
+# add 1 as 'r' to list 30
+curl -i -X POST -H "Content-Type: application/json"  -d '{"collaboratorId": 1, "accessType": "r"}' -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/collaborators
 
 ############ GET: /user/<int: userId>/lists/<int: listId>/collaborators
-# All collaborators should be able to see the collaborators on a list and
-# their accessTypes
+# All collaborators should be able to see the collaborators on a list they
+# are with and the accessTypes
+
+# not logged in (should fail == pass) **PASS**
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X GET -H "Content-Type: application/json" -b cookie-jar -k https://lists.hopto.org:61340/users/1/lists/28/collaborators
+
+# login 1
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+# list for 4/27 (should get error) **PASS**
+curl -i -X GET -H "Content-Type: application/json" -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists/27/collaborators
+# list for 1/28 (should get users 1 and 4) **PASS**
+curl -i -X GET -H "Content-Type: application/json" -b cookie-jar -k https://lists.hopto.org:61340/users/1/lists/28/collaborators
+# list for 3/30 (should get users 4, 3 and 1) **PASS**
+curl -i -X GET -H "Content-Type: application/json" -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/collaborators
 
 
 ############ GET: /user/<int: userId>/lists/<int: listId>/collaborators/<int: userId>
-# All collaborators should be able to see a collaborators on a list and
-# their accessTypes
+# All collaborators should be able to see a single collaborator on a list and
+# their accessType
+
+# not logged in (should fail == pass)
+
+# login 3
+# list for 1/28/4 (should fail == pass)
+# list for 4/27/1 (should return 1 info)
+
 
 
 ############ PUT: /user/<int: userId>/lists/<int: listId>/items/<int: itemId>
-# A list owner should be able to update a collaborator's accessType for a list.
+# Only a list owner should be able to update a collaborator's accessType for a list.
+
+# not logged in (should fail == pass)
+
+# login 3
+# change user 4 to read on list 30, but no json (should fail == pass)
+# change user 4 to read on list 30, with valid json
 
 
 ############ DELETE: /user/<int: userId>/lists/<int: listId>/items/<int: itemId>
 # A list owner should be able to delete a collaborator from a list. Note that
 # list items added by that collaborator are not removed.
+
+# not logged in (should fail == pass)
+
+# login 3
+# remove 4/27/3 (should fail == pass)
+# remove 3/29/1

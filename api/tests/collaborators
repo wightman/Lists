@@ -63,13 +63,17 @@ curl -i -X GET -H "Content-Type: application/json" -b cookie-jar -k https://list
 ############ GET: /user/<int: userId>/lists/<int: listId>/collaborators/<int: userId>
 # All collaborators should be able to see a single collaborator on a list and
 # their accessType
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/signin
 
 # not logged in (should fail == pass)
+curl -i -X GET -H "Content-Type: application/json" -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/collaborators/1
 
 # login 3
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "read@wightman.ca", "userPassword": "$2b$10$mytchfear8S1J.oEUMH4t.vh2Y16VbquDyN9H6BYxB3cwpUL0q6lO"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
 # list for 1/28/4 (should fail == pass)
+curl -i -X GET -H "Content-Type: application/json" -b cookie-jar -k https://lists.hopto.org:61340/users/1/lists/28/collaborators/4
 # list for 4/27/1 (should return 1 info)
-
+Oh-oh. This is a non-combination that returns NULL.
 
 
 ############ PUT: /user/<int: userId>/lists/<int: listId>/items/<int: itemId>

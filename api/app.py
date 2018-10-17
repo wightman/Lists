@@ -65,6 +65,8 @@ from resources.password import Password
 from resources.lists import Lists
 from resources.list import List
 from resources.collaborators import Collaborators
+from resources.collaborator import Collaborator
+from resources.accesstypes import AccessTypes
 #
 # Api resource routing: assign objects to endpoints
 #
@@ -79,6 +81,8 @@ api.add_resource(User, '/users/<int:userId>')
 api.add_resource(Lists, '/users/<int:userId>/lists')
 api.add_resource(List, '/users/<int:userId>/lists/<int:listId>')
 api.add_resource(Collaborators, '/users/<int:userId>/lists/<int:listId>/collaborators')
+api.add_resource(Collaborator, '/users/<int:userId>/lists/<int:listId>/collaborators/<int:collaboratorId>')
+api.add_resource(AccessTypes, '/accesstypes')
 
 context = ('cert.pem', 'key.pem') # Identify the certificates you've generated.
 

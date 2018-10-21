@@ -50,6 +50,8 @@ class Users(Resource):
             cursor.callproc(sqlProcName, sqlProcArgs)
             db.commit()
             response = cursor.fetchall()
+            for piece in response:
+                piece['uri'] = url_for('users', _external=True) + '/' + str(piece['userId'])
             responseCode = 200
         except Exception as e:
             response = {"status": e.args[1]}
@@ -97,7 +99,7 @@ class Users(Resource):
             response = {"message": "Tsk. Tsk. Another user has that email address."}
             responseCode = 409
         except Error as e:
-            response = {"message": e.args[0]"}
+            response = {"message": e.args[0]}
             responseCode = 409
         finally:
             #close dbConnection

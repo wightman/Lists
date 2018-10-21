@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, session, jsonify, abort, request, make_response
+from flask import Flask, session, jsonify, abort, request, make_response, url_for
 from flask_restful import Resource, reqparse, abort
 from flask_session import Session
 import pymysql.cursors
@@ -27,6 +27,8 @@ class List(Resource):
             cursor = db.cursor()
             cursor.callproc(sqlProcName, sqlProcArgs)
             response = cursor.fetchone()
+            response['uri'] = url_for('lists', userId = response['ownerId'],
+                _external=True) + '/' + str(response['listId'])
             responseCode = 200
         except Exception as e:
             response = {"status":  "Resource not found."}

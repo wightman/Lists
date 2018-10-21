@@ -1,10 +1,11 @@
+DROP PROCEDURE getCollaborators;
 DELIMITER //
 CREATE PROCEDURE getCollaborators
 (
    IN lId INT
 )
 BEGIN
-  SELECT userID as collaboratorID, accessType
+  SELECT userID as collaboratorId, accessType
     FROM collaborators
     WHERE listId = lId;
   IF(FOUND_ROWS() = 0) THEN

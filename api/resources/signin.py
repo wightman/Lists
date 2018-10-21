@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import jsonify, abort, request, make_response
+from flask import jsonify, abort, request, make_response, url_for
 from flask_restful import Resource, reqparse, abort
 from flask import Flask, session
 from flask_session import Session
@@ -52,6 +52,7 @@ class Signin(Resource):
             cursor.callproc(sqlProcName,sqlProcArgs)
             response = cursor.fetchone()
             db.commit()
+            response['uri'] = url_for('users', _external=True) + '/' + str(response['userId'])
             # At this point we have sucessfully authenticated.
 
             # the db query returns 1 for True and 0 for False for userAdmin.

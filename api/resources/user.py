@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, session, jsonify, abort, request, make_response
+from flask import Flask, session, jsonify, abort, request, make_response, url_for
 from flask_restful import Resource, reqparse, abort
 from flask_session import Session
 import pymysql.cursors
@@ -32,6 +32,7 @@ class User(Resource):
             cursor.callproc(sqlProcName, sqlProcArgs)
             db.commit()
             response = cursor.fetchone()
+            response['uri'] = url_for('users', _external=True) + '/' + str(response['userId'])
             responseCode = 200
         except Exception as e:
             response = {"status": e.args[1]}

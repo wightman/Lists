@@ -77,6 +77,9 @@ class Lists(Resource):
             cursor = db.cursor()
             cursor.callproc(sqlProcName, sqlProcArgs)
             response = cursor.fetchall()
+            for piece in response:
+                piece['uri'] = url_for('lists', userId = piece['ownerId'],
+                    _external=True) + '/' + str(piece['listId']) 
             responseCode = 200
         except Exception as e:
             response = {"status": e.args[1]}

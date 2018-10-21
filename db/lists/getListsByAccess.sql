@@ -1,3 +1,4 @@
+DROP PROCEDURE getListsByAccess;
 DELIMITER //
 CREATE PROCEDURE getListsByAccess
 (
@@ -10,7 +11,7 @@ CREATE PROCEDURE getListsByAccess
 BEGIN
    SELECT U.userId AS 'OwnerId', U.userName AS 'ownerName',
       L.listId, L.listName, L.listDescription, L.listSince,
-      C.accessType, C.collaborationViewed, C.collaboratorSince
+      C.accessTypes, C.collaborationViewed, C.collaboratorSince
       FROM lists AS L,
         collaborators AS C,
         users AS U

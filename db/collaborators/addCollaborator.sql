@@ -6,7 +6,7 @@ CREATE PROCEDURE addCollaborator
    IN orw CHAR(1)
 )
 BEGIN
-  INSERT INTO collaborators (userId, listId, accessType)
+  INSERT INTO collaborators (userId, listId, access)
     VALUES (uId, lId, orw);
   IF(ROW_COUNT() = 0) THEN
     SIGNAL SQLSTATE '52707'

@@ -39,6 +39,8 @@ class Collaborator(Resource):
             cursor = db.cursor()
             cursor.callproc(sqlProcName, sqlProcArgs)
             response = cursor.fetchone()
+            response['uri']  = url_for('collaborators', userId = userId, listId = listId,
+                _external=True) + '/' + str(response['collaboratorId'])
             responseCode = 200
         except Exception as e:
             response = {"status": e.args[1]}

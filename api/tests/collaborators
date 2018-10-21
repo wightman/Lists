@@ -80,10 +80,18 @@ Oh-oh. This is a non-combination that returns NULL.
 # Only a list owner should be able to update a collaborator's accessType for a list.
 
 # not logged in (should fail == pass)
+curl -i -X PUT -H "Content-Type: application/json"  -d '{"accessType": "R"}' -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/collaborators/4
+
+# login 1 and change user 4 to read on list 30 (should fail == pass)
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X PUT -H "Content-Type: application/json"  -d '{"accessType": "R"}' -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/collaborators/4
 
 # login 3
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "read@wightman.ca", "userPassword": "$2b$10$mytchfear8S1J.oEUMH4t.vh2Y16VbquDyN9H6BYxB3cwpUL0q6lO"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
 # change user 4 to read on list 30, but no json (should fail == pass)
+curl -i -X PUT -H "Content-Type: application/json" -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/collaborators/4
 # change user 4 to read on list 30, with valid json
+curl -i -X PUT -H "Content-Type: application/json"  -d '{"accessType": "R"}' -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/collaborators/4
 
 
 ############ DELETE: /user/<int: userId>/lists/<int: listId>/items/<int: itemId>
@@ -91,7 +99,11 @@ Oh-oh. This is a non-combination that returns NULL.
 # list items added by that collaborator are not removed.
 
 # not logged in (should fail == pass)
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/collaborators/4
 
 # login 3
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "read@wightman.ca", "userPassword": "$2b$10$mytchfear8S1J.oEUMH4t.vh2Y16VbquDyN9H6BYxB3cwpUL0q6lO"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
 # remove 4/27/3 (should fail == pass)
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists/27/collaborators/3
 # remove 3/29/1
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/29/collaborators/1

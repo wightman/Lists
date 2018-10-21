@@ -1,3 +1,4 @@
+DROP PROCEDURE getLists;
 DELIMITER //
 CREATE PROCEDURE getLists
 (
@@ -7,9 +8,9 @@ CREATE PROCEDURE getLists
  *  Each list identifies it's owner.
  */
 BEGIN
-   SELECT U.userId AS 'OwnerId', U.userName AS 'ownerName',
+   SELECT U.userId AS 'ownerId', U.userName AS 'ownerName',
       L.listId, L.listName, L.listDescription, L.listSince,
-      C.accessTypes, C.collaborationViewed, C.collaboratorSince
+      C.accessType, C.collaborationViewed, C.collaboratorSince
       FROM lists AS L,
         collaborators AS C,
         users AS U

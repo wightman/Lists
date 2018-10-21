@@ -1,3 +1,4 @@
+DROP PROCEDURE getCollaborator;
 DELIMITER //
 CREATE PROCEDURE getCollaborator
 (
@@ -5,7 +6,7 @@ CREATE PROCEDURE getCollaborator
   IN lId INT
 )
 BEGIN
-  SELECT userID as collaboratorID, listId, accessType, collaboratorSince
+  SELECT userID as collaboratorId, listId, accessTYpe, collaboratorSince
     FROM collaborators
     WHERE listId = lId AND
       userId = cId;

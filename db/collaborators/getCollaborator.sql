@@ -6,7 +6,7 @@ CREATE PROCEDURE getCollaborator
   IN lId INT
 )
 BEGIN
-  SELECT userID as collaboratorId, listId, accessTYpe, collaboratorSince
+  SELECT userID as collaboratorId, listId, accessType, collaboratorSince
     FROM collaborators
     WHERE listId = lId AND
       userId = cId;

@@ -1,3 +1,4 @@
+DROP PROCEDURE getAccessTypes;
 DELIMITER //
 CREATE PROCEDURE getAccessTypes
 (

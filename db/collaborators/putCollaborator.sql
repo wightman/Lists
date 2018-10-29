@@ -1,3 +1,4 @@
+DROP PROCEDURE putCollaborators;
 DELIMITER //
 CREATE PROCEDURE putCollaborator
 (

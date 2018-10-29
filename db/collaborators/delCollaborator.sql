@@ -1,3 +1,4 @@
+DROP PROCEDURE delCollaborators;
 DELIMITER //
 CREATE PROCEDURE delCollaborator
 (

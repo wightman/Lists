@@ -1,12 +1,12 @@
 ###########
 # TEST DATA
 
-listId  ownerID  CoopId  accessType  listName
+listId  ownerID  CollId  accessType  listName
 ------  ------   ------  ----------  -----------
-  27      4            3       w         Sweaters
-  28      1            4       r         Trucks
-  30      3            4       w         Summer Vacation Ideas
-  30      3            1       r         Summer Vacation Ideas
+  27      4            3       W         Sweaters
+  28      1            4       R         Trucks
+  30      3            4       W         Summer Vacation Ideas
+  30      3            1       R         Summer Vacation Ideas
 
 ############ POST: /user/<int: userId>/lists/<int: listId>/collaborators
 

@@ -9,24 +9,47 @@ from decorators import login_required, admin_required
 import jsondate as json
 from pymysql.err import IntegrityError
 
-# Lists
-# shows a list of all Lists, and lets you POST to add new Lists
-class Lists(Resource):
+# Collaborators
+# List owners, writers can post new items
+class Items(Resource):
     @login_required
-    def post(self, userId):
-        if userId != session['userId']:
-            response = {'message': 'cannot create lists for others'}
+    def post(self, userId, listId):
+        sqlProcName = 'getCollaborator'
+        sqlProcArgs = (session['userId'], listId)
+        # Can only request if the user is a collaborator - how to tell?
+        db = pymysql.connect(
+            dbSettings.DB_HOST,
+            dbSettings.DB_USER,
+            dbSettings.DB_PASSWD,
+            dbSettings.DB_DATABASE,
+            charset='utf8mb4',
+            cursorclass= pymysql.cursors.DictCursor)
+        try:
+            cursor = db.cursor()
+            cursor.callproc(sqlProcName, sqlProcArgs)
+            if cursor.rowcount == 0:
+                raise Exception("Not a collaborator for the list")
+            response=cursor.fetchone()
+            if response['accessType'] == 'R':
+                raise Exception("No write access for the list")
+        except Exception as e:
+            response = {"message": e.args}
             responseCode = 403
+            db.close()
             return make_response(jsonify(response), responseCode)
-        sqlProcName = 'addList'
+        sqlProcName = 'addItem'
         # parse user data
         parser = reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument('listName', type = str, location='json',
-            required=True, help='List name is required.')
-        parser.add_argument('listDescription', type=str, location='json',
-            required=True, help='A desription of the list is required.')
+        parser.add_argument('listId', type = int, location='json',
+            required=True, help='A list ID is required.')
+        parser.add_argument('itemName', type=str, location='json',
+            required=True, help='An item name is required.')
+        parser.add_argument('itemDetail', type=str, location='json',
+            required=True, help='Item detail is required.')
+        parser.add_argument('collaboratorId', type=str, location='json',
+            required=True, help='Item collaboratorId is required.')
         args = parser.parse_args()
-        sqlProcArgs = [session['userId'], args['listName'], args['listDescription'] ]
+        sqlProcArgs = [args['listId'], args['itemName'], args['itemDetail'], args['collaboratorId'] ]
         # open the sql connection and call the stored procedure
         db = pymysql.connect(
             dbSettings.DB_HOST,
@@ -40,13 +63,10 @@ class Lists(Resource):
             cursor.callproc(sqlProcName, sqlProcArgs)
             db.commit()
             result = cursor.fetchone()
-            uri = url_for('lists', userId = userId, _external=True)
-            uri = uri + '/' + str(result['LAST_INSERT_ID()'])
+            uri = url_for('items', userId = userId, listId = listId, _external=True)
+            uri = uri + '/' + str(args['itemId'])
             response = { 'uri' : uri }
             responseCode = 201
-        except IntegrityError as e:
-            response = {"message": "WAT?. You already have that list by that name."}
-            responseCode = 409
         except Exception as e:
             response = {"message": e.args}
             responseCode = 500
@@ -56,16 +76,30 @@ class Lists(Resource):
             return make_response(jsonify(response), responseCode)
 
     @login_required
-    def get(self, userId):
-        parser = reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument('accessType', type=bool, location='args')
-        args = parser.parse_args()
-        sqlProcName = 'getLists'
-        sqlProcArgs = (userId,)
-        if args['accessType'] is not None:
-            sqlProcName = 'getListsByAccess'
-            sqlProcArgs = (userId,request.args.get('accessType').upper(),)
-        # open the sql connection and call the stored procedure
+    def get(self, userId, listId):
+        sqlProcName = 'getCollaborator'
+        sqlProcArgs = (session['userId'], listId)
+        # Can only request if the user is a collaborator - how to tell?
+        db = pymysql.connect(
+            dbSettings.DB_HOST,
+            dbSettings.DB_USER,
+            dbSettings.DB_PASSWD,
+            dbSettings.DB_DATABASE,
+            charset='utf8mb4',
+            cursorclass= pymysql.cursors.DictCursor)
+        try:
+            cursor = db.cursor()
+            cursor.callproc(sqlProcName, sqlProcArgs)
+            if cursor.rowcount == 0:
+                raise Exception("Not a collaborator for the list")
+        except Exception as e:
+            response = {"message": e.args}
+            responseCode = 403
+            db.close()
+            return make_response(jsonify(response), responseCode)
+        sqlProcName = 'getItems'
+        sqlProcArgs = (listId,)
+        # Can only request if the user is a collaborator - how to tell?
         db = pymysql.connect(
             dbSettings.DB_HOST,
             dbSettings.DB_USER,
@@ -78,16 +112,18 @@ class Lists(Resource):
             cursor.callproc(sqlProcName, sqlProcArgs)
             response = cursor.fetchall()
             for piece in response:
-                piece['uri'] = url_for('lists', userId = piece['ownerId'],
-                    _external=True) + '/' + str(piece['listId']) 
+               piece['uri']  = url_for('items', userId = userId, listId = listId,
+                _external=True) + '/' + str(piece['itemId'])
             responseCode = 200
         except Exception as e:
-            response = {"status": e.args[1]}
-            responseCode = 404
+            response = {"message": e.args}
+            responseCode = 500
+            db.close()
+            return make_response(jsonify(response), responseCode)
         finally:
             #close dbConnection
             db.close()
             return make_response(jsonify(response), responseCode)
 
 
-# End Lists.py
+# End items.py

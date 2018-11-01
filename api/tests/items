@@ -1,31 +1,66 @@
 ###########
 # TEST DATA
 
-userID    listName                listDescription
-------    -----------------------------------------------------------------
-4         Sweaters                People who need them
-1         Trucks                  The search for the perfect truck for Rick
-3         Jam Recipes             Hey these look good!
-3         Summer Vacation Ideas   Places to go
+userID    listId  listName  collId  accessType
+------    --------------------------------------
+4          27     Sweaters    3       W
+1          28     Trucks      4       R
+3          30     Jam Recipes 4       W
+3          30     Jam Recipes 1       R
 
 ############ POST: /user/<int: userId>/lists/<int: listId>/items
 # Users who either own a list or have write access should be able to post
 # an item to a list.
+# Not logged in (should fail == pass)
+
+# No access (should fail == pass)
+
+# R access (should fail == pass)
+
+# W or O access
 
 
 ############ GET: /user/<int: userId>/lists/<int: listId>/items
 # All collaborators should be able to retrieve items in a list.
+# Not logged in (should fail == pass)
+
+# No access (should fail == pass)
+
+# R access
+
+# W or O access
 
 
 ############ GET: /user/<int: userId>/lists/<int: listId>/items/<int: itemId>
 # All collaborators should be able to retrieve an item in a list.
+# Not logged in (should fail == pass)
+
+# No access (should fail == pass)
+
+# R access
+
+# W or O access
 
 
 ############ PUT: /user/<int: userId>/lists/<int: listId>/items/<int: itemId>
 # Users who either own a list or have write access should be able to update
 # an item in a list.
+# Not logged in (should fail == pass)
+
+# No access (should fail == pass)
+
+# R access (should fail == pass)
+
+# W or O access
 
 
 ############ DELETE: /user/<int: userId>/lists/<int: listId>/items/<int: itemId>
 # Users who either own a list or have write access should be able to delete
 # an item from a list.
+# Not logged in (should fail == pass)
+
+# No access (should fail == pass)
+
+# R access (should fail == pass)
+
+# W or O access

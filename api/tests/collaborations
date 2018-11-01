@@ -1,0 +1,41 @@
+###########
+# TEST DATA
+
+listId  ownerID  CoopId  accessType  listName
+------  ------   ------  ----------  -----------
+  27      4            3       w         Sweaters
+  28      1            4       r         Trucks
+  30      3            4       w         Summer Vacation Ideas
+  30      3            1       r         Summer Vacation Ideas
+
+############ POST: Only list owners can add collaborators,
+############       through /users/<uId>/lists/<lId>/collaborators
+
+
+############ GET: /user/<int: userId>/collaborations
+# no login (should fail == pass)
+
+# not that user (should fail == pass)
+
+# as that user
+
+
+############ GET: /user/<int: userId>/collaborations/<int: listId>
+# no login (should fail == pass)
+
+# not that user (should fail == pass)
+
+# as that user
+
+
+############ PUT: Only list owners can modify collaborators,
+############       through /users/<uId>/lists/<lId>/collaborators/<cId>
+
+
+############ DELETE: /user/<int: userId>/collaborations/<int: listId>
+############         Users can end their collaborations
+# no login (should fail == pass)
+
+# not that user (should fail == pass)
+
+# as that user

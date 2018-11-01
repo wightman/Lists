@@ -9,24 +9,24 @@ from decorators import login_required, admin_required
 import jsondate as json
 from pymysql.err import IntegrityError
 
-# Collaborators
-# List owners can post new collaborations
-class Collaborators(Resource):
+# Lists
+# shows a list of all Lists, and lets you POST to add new Lists
+class Lists(Resource):
     @login_required
-    def post(self, userId, listId):
+    def post(self, userId):
         if userId != session['userId']:
-            response = {'message': 'Only list owners can define collaborations'}
+            response = {'message': 'cannot create lists for others'}
             responseCode = 403
             return make_response(jsonify(response), responseCode)
-        sqlProcName = 'addCollaborator'
+        sqlProcName = 'addList'
         # parse user data
         parser = reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument('collaboratorId', type = int, location='json',
-            required=True, help=' A collaborator ID is required.')
-        parser.add_argument('accessType', type=str, location='json',
-            required=True, help='An access type is required.')
+        parser.add_argument('listName', type = str, location='json',
+            required=True, help='List name is required.')
+        parser.add_argument('listDescription', type=str, location='json',
+            required=True, help='A desription of the list is required.')
         args = parser.parse_args()
-        sqlProcArgs = [args['collaboratorId'], listId, args['accessType'].upper() ]
+        sqlProcArgs = [session['userId'], args['listName'], args['listDescription'] ]
         # open the sql connection and call the stored procedure
         db = pymysql.connect(
             dbSettings.DB_HOST,
@@ -40,12 +40,12 @@ class Collaborators(Resource):
             cursor.callproc(sqlProcName, sqlProcArgs)
             db.commit()
             result = cursor.fetchone()
-            uri = url_for('collaborators', userId = userId, listId = listId, _external=True)
-            uri = uri + '/' + str(args['collaboratorId'])
+            uri = url_for('lists', userId = userId, _external=True)
+            uri = uri + '/' + str(result['LAST_INSERT_ID()'])
             response = { 'uri' : uri }
             responseCode = 201
         except IntegrityError as e:
-            response = {"message": "This is a duplicate collaboration"}
+            response = {"message": "WAT?. You already have that list by that name."}
             responseCode = 409
         except Exception as e:
             response = {"message": e.args}
@@ -56,10 +56,16 @@ class Collaborators(Resource):
             return make_response(jsonify(response), responseCode)
 
     @login_required
-    def get(self, userId, listId):
-        sqlProcName = 'getCollaborator'
-        sqlProcArgs = (session['userId'], listId)
-        # Can only request if the user is a collaborator - how to tell?
+    def get(self, userId):
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('accessType', type=bool, location='args')
+        args = parser.parse_args()
+        sqlProcName = 'getLists'
+        sqlProcArgs = (userId,)
+        if args['accessType'] is not None:
+            sqlProcName = 'getListsByAccess'
+            sqlProcArgs = (userId,request.args.get('accessType').upper(),)
+        # open the sql connection and call the stored procedure
         db = pymysql.connect(
             dbSettings.DB_HOST,
             dbSettings.DB_USER,
@@ -70,23 +76,10 @@ class Collaborators(Resource):
         try:
             cursor = db.cursor()
             cursor.callproc(sqlProcName, sqlProcArgs)
-            if cursor.rowcount == 0:
-                raise Exception("Not a collaborator for the list")
-        except Exception as e:
-            response = {"message": e.args}
-            responseCode = 403
-            db.close()
-            return make_response(jsonify(response), responseCode)
-        sqlProcName = 'getCollaborators'
-        sqlProcArgs = (listId,)
-        try:
-            cursor = db.cursor()
-            cursor.callproc(sqlProcName, sqlProcArgs)
             response = cursor.fetchall()
             for piece in response:
-               piece['uri']  = url_for('collaborators', userId = userId, listId = listId,
-                _external=True) + '/' + str(piece['collaboratorId'])
-
+                piece['uri'] = url_for('lists', userId = piece['ownerId'],
+                    _external=True) + '/' + str(piece['listId']) 
             responseCode = 200
         except Exception as e:
             response = {"status": e.args[1]}
@@ -97,4 +90,4 @@ class Collaborators(Resource):
             return make_response(jsonify(response), responseCode)
 
 
-# End collaborators.py
+# End Lists.py

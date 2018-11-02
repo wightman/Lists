@@ -62,7 +62,7 @@ def put(self, userId, listId, collaboratorId):
     parser.add_argument('accessType', type=str, location='json',
         required=True, help='An access type is required.')
     args = parser.parse_args()
-    sqlProcArgs = [collaboratorId, listId, args['accessType'] ]
+    sqlProcArgs = [collaboratorId, listId, args['accessType'].upper() ]
     # open the sql connection and call the stored procedure
     db = pymysql.connect(
         dbSettings.DB_HOST,

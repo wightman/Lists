@@ -78,13 +78,16 @@ class Signin(Resource):
 	# curl -i -H "Content-Type: application/json" -X DELETE -b cookie-jar
 	#	-k https://lists.hopto.org:61340/signin
     def delete(self):
-        if session['userId']:
+        if not session:
+            response = {'message': 'Logout failed.'}
+            responseCode = 404
+#       elif not session['userId']:
+#            response = {'message': 'Logout failed.'}
+#            responseCode = 404
+        else:
             session.clear()
             response = {'message': 'Logout successful.'}
             responseCode = 204
-        else:
-            response = {'message': 'Logout failed.'}
-            responseCode = 404
         return make_response(jsonify(response), responseCode)
 
 # End signin.py

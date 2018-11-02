@@ -1,16 +1,14 @@
-DROP PROCEDURE putCollaborator;
+DROP PROCEDURE delCollaboration;
 DELIMITER //
-CREATE PROCEDURE putCollaborator
+CREATE PROCEDURE delCollaboration
 (
   IN uId INT,
-  IN lId INT,
-  IN orw CHAR(1)
+  IN lId INT
 )
 BEGIN
-  UPDATE collaborators
-    SET  accessType = orw
+  DELETE FROM collaborators
     WHERE userId = uId AND listId = lId;
-  IF(ROW_COUNT() = 0) THEN
+  IF(ROW_COUNT() < 1) THEN
     SIGNAL SQLSTATE '52740'
       SET MESSAGE_TEXT = 'Collaboration not found.';
   END IF;

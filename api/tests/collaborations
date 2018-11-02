@@ -3,29 +3,39 @@
 
 listId  ownerID  CoopId  accessType  listName
 ------  ------   ------  ----------  -----------
-  27      4            3       w         Sweaters
-  28      1            4       r         Trucks
-  30      3            4       w         Summer Vacation Ideas
-  30      3            1       r         Summer Vacation Ideas
+  27      4            3       W         Sweaters
+  28      1            4       R         Trucks
+  30      3            4       W         Summer Vacation Ideas
+  30      3            1       R         Summer Vacation Ideas
 
 ############ POST: Only list owners can add collaborators,
 ############       through /users/<uId>/lists/<lId>/collaborators
 
 
 ############ GET: /user/<int: userId>/collaborations
-# no login (should fail == pass)
+# no login (should fail == pass) **PASS**
+curl -i -X GET -H "Content-Type: application/json" -b cookie-jar -k https://lists.hopto.org:61340/users/1/collaborations
 
-# not that user (should fail == pass)
+# not that user (should fail == pass) **PASS**
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "nmc@example.com", "userPassword": "$2b$10$bVDGlJSRbr3XdvegU3WiH.yijTagQ8HtuVyTOUlmDb0By0vK.6Z9W"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X GET -H "Content-Type: application/json" -b cookie-jar -k https://lists.hopto.org:61340/users/1/collaborations
 
-# as that user
+# as that user **PASS**
+curl -i -X GET -H "Content-Type: application/json" -b cookie-jar -k https://lists.hopto.org:61340/users/4/collaborations
 
 
 ############ GET: /user/<int: userId>/collaborations/<int: listId>
-# no login (should fail == pass)
+# no login (should fail == pass **PASS**
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X GET -H "Content-Type: application/json" -b cookie-jar -k https://lists.hopto.org:61340/users/1/collaborations/28
 
-# not that user (should fail == pass)
+# non collaborator user (should fail == pass) **PASS**
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X GET -H "Content-Type: application/json" -b cookie-jar -k https://lists.hopto.org:61340/users/4/collaborations/27
 
-# as that user
+# as that user **PASS**
+curl -i -X GET -H "Content-Type: application/json" -b cookie-jar -k https://lists.hopto.org:61340/users/1/collaborations/28
 
 
 ############ PUT: Only list owners can modify collaborators,
@@ -34,8 +44,20 @@ listId  ownerID  CoopId  accessType  listName
 
 ############ DELETE: /user/<int: userId>/collaborations/<int: listId>
 ############         Users can end their collaborations
-# no login (should fail == pass)
+# no login (should fail == pass) **PASS**
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X DELETE -H "Content-Type: application/json" -b cookie-jar -k https://lists.hopto.org:61340/users/1/collaborations/28
 
-# not that user (should fail == pass)
+# not a collaborator user (should fail == pass) **PASS**
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X DELETE -H "Content-Type: application/json" -b cookie-jar -k https://lists.hopto.org:61340/users/4/collaborations/27
 
-# as that user
+# as list owner (should fail == pass) **PASS**
+curl -i -X DELETE -H "Content-Type: application/json" -b cookie-jar -k https://lists.hopto.org:61340/users/1/collaborations/28
+
+# Collaborator user (but not owner)
+curl -i -X DELETE -H "Content-Type: application/json" -b cookie-jar -k https://lists.hopto.org:61340/users/3/collaborations/30
+
+# fix it
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "read@wightman.ca", "userPassword": "$2b$10$mytchfear8S1J.oEUMH4t.vh2Y16VbquDyN9H6BYxB3cwpUL0q6lO"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X POST -H "Content-Type: application/json"  -d '{"collaboratorId": 4, "accessType": "w"}' -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/collaborators

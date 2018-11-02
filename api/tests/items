@@ -1,12 +1,18 @@
 ###########
-# TEST DATA
+# TEST DATA: Lists
 
 userID    listId  listName  collId  accessType
-------    --------------------------------------
+----------------------------------------------
 4          27     Sweaters    3       W
 1          28     Trucks      4       R
 3          30     Jam Recipes 4       W
 3          30     Jam Recipes 1       R
+
+###########
+# TEST DATA: Items
+
+itemId    listID itemName  itemDetail         creatorId  itemPosition  completed
+------    ----------------------------------------------------------------------
 
 ############ POST: /user/<int: userId>/lists/<int: listId>/items
 # Users who either own a list or have write access should be able to post

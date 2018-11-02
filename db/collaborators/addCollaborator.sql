@@ -1,4 +1,4 @@
-DROP PROCEDURE addCollaborators;
+DROP PROCEDURE addCollaborator;
 DELIMITER //
 CREATE PROCEDURE addCollaborator
 (

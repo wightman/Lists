@@ -6,7 +6,7 @@ CREATE TABLE items
     itemDetail VARCHAR(255),
     completed BOOLEAN DEFAULT false,
     listId INT NOT NULL,
-    creatorId INT NOT NULL,
+    collaboratorId INT NOT NULL,
     itemSince  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY (itemId),

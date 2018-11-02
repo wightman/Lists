@@ -8,7 +8,7 @@ CREATE PROCEDURE addItem
    IN cId INT
 )
 BEGIN
-   INSERT INTO items (listId, itemName, itemDetail, creatorId)
+   INSERT INTO items (listId, itemName, itemDetail, collaboratorId)
          VALUES (lid, iName, iDetail, cId);
   IF(ROW_COUNT() = 0) THEN
      SIGNAL SQLSTATE '52731'

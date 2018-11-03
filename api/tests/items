@@ -3,70 +3,106 @@
 
 userID    listId  listName  collId  accessType
 ----------------------------------------------
-4          27     Sweaters    3       W
-1          28     Trucks      4       R
-3          30     Jam Recipes 4       W
-3          30     Jam Recipes 1       R
+4          27    Sweaters      3       W
+1          28    Trucks        4       R
+3          30    Places to go  4       W
+3          30    Places to go  1       R
 
 ###########
 # TEST DATA: Items
 
 itemId    listID itemName  itemDetail         creatorId  itemPosition  completed
 ------    ----------------------------------------------------------------------
+  5        27     Rick      Red and white      1          1             F
+  6        27     Dylan     Purple and gold    4          1             F
+          30     France     Eiffel Tower!      4          1             F
 
 ############ POST: /user/<int: userId>/lists/<int: listId>/items
 # Users who either own a list or have write access should be able to post
 # an item to a list.
-# Not logged in (should fail == pass)
+# Not logged in (should fail == pass) **PASS**
+curl -X POST -H "Content-Type: application/json" -d '{"itemName": "Rick", "itemDetail": "Red and white"}'  -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists/27/items
 
-# No access (should fail == pass)
+# No access (should fail == pass) **PASS**
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -X POST -H "Content-Type: application/json" -d '{"itemName": "Rick", "itemDetail": "Red and white"}'  -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists/27/items
 
 # R access (should fail == pass)
+curl -X POST -H "Content-Type: application/json" -d '{"itemName": "Peach", "itemDetail": "with cranberries"}'  -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/items
 
-# W or O access
+# W or O access **PASS**
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "read@wightman.ca", "userPassword": "$2b$10$mytchfear8S1J.oEUMH4t.vh2Y16VbquDyN9H6BYxB3cwpUL0q6lO"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -X POST -H "Content-Type: application/json" -d '{"itemName": "Rick", "itemDetail": "Red and white"}'  -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists/27/items
+
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "nmc@example.com", "userPassword": "$2b$10$bVDGlJSRbr3XdvegU3WiH.yijTagQ8HtuVyTOUlmDb0By0vK.6Z9W"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -X POST -H "Content-Type: application/json" -d '{"itemName": "Dylan", "itemDetail": "Purple and gold"}'  -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists/27/items
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "read@wightman.ca", "userPassword": "$2b$10$mytchfear8S1J.oEUMH4t.vh2Y16VbquDyN9H6BYxB3cwpUL0q6lO"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -X POST -H "Content-Type: application/json" -d '{"itemName": "France", "itemDetail": "Eiffel Tower!"}'  -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/items
 
 
 ############ GET: /user/<int: userId>/lists/<int: listId>/items
 # All collaborators should be able to retrieve items in a list.
-# Not logged in (should fail == pass)
+# Not logged in (should fail == pass) **PASS**
+curl -i -X DELETE -b cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X GET -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists/27/items
 
-# No access (should fail == pass)
+# No access (should fail == pass) **PASS**
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X GET -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists/27/items
 
-# R access
-
-# W or O access
+# R, W or O access
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "read@wightman.ca", "userPassword": "$2b$10$mytchfear8S1J.oEUMH4t.vh2Y16VbquDyN9H6BYxB3cwpUL0q6lO"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X GET -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/items
+curl -i -X GET -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists/27/items
 
 
 ############ GET: /user/<int: userId>/lists/<int: listId>/items/<int: itemId>
 # All collaborators should be able to retrieve an item in a list.
-# Not logged in (should fail == pass)
+# Not logged in (should fail == pass **PASS**
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X GET  -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/items/7
 
-# No access (should fail == pass)
+# No access (should fail == pass) **PASS**
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X GET  -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists/27/items/5
 
-# R access
-
-# W or O access
+# R, W or O access
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "read@wightman.ca", "userPassword": "$2b$10$mytchfear8S1J.oEUMH4t.vh2Y16VbquDyN9H6BYxB3cwpUL0q6lO"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X GET  -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists/27/items/5
 
 
 ############ PUT: /user/<int: userId>/lists/<int: listId>/items/<int: itemId>
 # Users who either own a list or have write access should be able to update
 # an item in a list.
-# Not logged in (should fail == pass)
+# Not logged in (should fail == pass) **PASS**
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X PUT -H "Content-Type: application/json"  -d '{"itemName": "France", "itemDetail": "Eiffel Tower", "completed": True, "itemPosition": 2}' -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/items/7
 
-# No access (should fail == pass)
+# No access (should fail == pass) **PASS**
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X PUT -H "Content-Type: application/json"  -d '{"itemName": "Rick", "itemDetail": "Red and white", "completed": True, "itemPosition": 2}' -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/items/5
 
-# R access (should fail == pass)
+# R access (should fail == pass) **PASS**
+curl -i -X PUT -H "Content-Type: application/json"  -d '{"itemName": "France", "itemDetail": "Eiffel Tower", "completed": True, "itemPosition": 2}' -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/items/7
 
-# W or O access
+# W or O access **PASS**
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "read@wightman.ca", "userPassword": "$2b$10$mytchfear8S1J.oEUMH4t.vh2Y16VbquDyN9H6BYxB3cwpUL0q6lO"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X PUT -H "Content-Type: application/json"  -d '{"itemName": "France", "itemDetail": "Eiffel Tower", "completed": true, "itemPosition": 2}' -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/items/7
 
 
 ############ DELETE: /user/<int: userId>/lists/<int: listId>/items/<int: itemId>
 # Users who either own a list or have write access should be able to delete
 # an item from a list.
-# Not logged in (should fail == pass)
+# Not logged in (should fail == pass) **PASS**
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/items/7
 
-# No access (should fail == pass)
+# No access (should fail == pass) **PASS**
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "rick@example.com", "userPassword": "$2b$10$Z0nkkI4CIGN1.4Ge/MhGPOCAAL7m4wmk6S4x8v4IvCVsDGeTGXiV6"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/30/items/7
 
-# R access (should fail == pass)
+# R access (should fail == pass) **PASS**
 
-# W or O access
+# W or O access **PASS**
+curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "read@wightman.ca", "userPassword": "$2b$10$mytchfear8S1J.oEUMH4t.vh2Y16VbquDyN9H6BYxB3cwpUL0q6lO"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/users/4/lists/27/items/5

@@ -40,16 +40,12 @@ class Items(Resource):
         sqlProcName = 'addItem'
         # parse user data
         parser = reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument('listId', type = int, location='json',
-            required=True, help='A list ID is required.')
         parser.add_argument('itemName', type=str, location='json',
             required=True, help='An item name is required.')
         parser.add_argument('itemDetail', type=str, location='json',
             required=True, help='Item detail is required.')
-        parser.add_argument('collaboratorId', type=str, location='json',
-            required=True, help='Item collaboratorId is required.')
         args = parser.parse_args()
-        sqlProcArgs = [args['listId'], args['itemName'], args['itemDetail'], args['collaboratorId'] ]
+        sqlProcArgs = [listId, args['itemName'], args['itemDetail'], session['userId'] ]
         # open the sql connection and call the stored procedure
         db = pymysql.connect(
             dbSettings.DB_HOST,
@@ -64,7 +60,7 @@ class Items(Resource):
             db.commit()
             result = cursor.fetchone()
             uri = url_for('items', userId = userId, listId = listId, _external=True)
-            uri = uri + '/' + str(args['itemId'])
+            uri = uri + '/' + str(result['LAST_INSERT_ID()'])
             response = { 'uri' : uri }
             responseCode = 201
         except Exception as e:

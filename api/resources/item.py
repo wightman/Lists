@@ -34,7 +34,7 @@ class Item(Resource):
             db.close()
             return make_response(jsonify(response), responseCode)
         sqlProcName = 'getItem'
-        sqlProcArgs = (listId,itemId)
+        sqlProcArgs = (itemId, )
         # Can only request if the user is a collaborator - how to tell?
         db = pymysql.connect(
             dbSettings.DB_HOST,
@@ -46,15 +46,13 @@ class Item(Resource):
         try:
             cursor = db.cursor()
             cursor.callproc(sqlProcName, sqlProcArgs)
-            response = cursor.fetchall()
+            response = cursor.fetchone()
             response['uri']  = url_for('items', userId = userId, listId = listId,
                 _external=True) + '/' + str(response['itemId'])
             responseCode = 200
         except Exception as e:
             response = {"message": e.args}
             responseCode = 500
-            db.close()
-            return make_response(jsonify(response), responseCode)
         finally:
             #close dbConnection
             db.close()
@@ -88,19 +86,17 @@ class Item(Resource):
         sqlProcName = 'putItem'
         # parse user data
         parser = reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument('itemId', type = int, location='json',
-            required=True, help='A list ID is required.')
         parser.add_argument('itemName', type=str, location='json',
             required=True, help='An item name is required.')
         parser.add_argument('itemDetail', type=str, location='json',
             required=True, help='Item detail is required.')
-        parser.add_argument('completed', type=boolean, location='json',
+        parser.add_argument('completed', type=bool, location='json',
             required=True, help='Item completion status is required.')
         parser.add_argument('itemPosition', type=int, location='json',
             required=True, help='itemPosition is required.')
         args = parser.parse_args()
-        sqlProcArgs = [args['itemId'], args['itemName'], args['itemDetail'],
-            args['completed'], args['itemPosition'] ]
+        sqlProcArgs = [itemId, args['itemName'], args['itemDetail'],
+            args['itemPosition'], args['completed'] ]
         # open the sql connection and call the stored procedure
         db = pymysql.connect(
             dbSettings.DB_HOST,
@@ -149,8 +145,8 @@ class Item(Resource):
             responseCode = 403
             db.close()
             return make_response(jsonify(response), responseCode)
-        sqlProcName = 'delCollaborator'
-        sqlProcArgs = (collaboratorId, itemId)
+        sqlProcName = 'delItem'
+        sqlProcArgs = (itemId, )
         db = pymysql.connect(
             dbSettings.DB_HOST,
             dbSettings.DB_USER,

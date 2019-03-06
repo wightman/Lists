@@ -1,5 +1,5 @@
 # Lists DB Documentation
-The procedures and table definitions for the Lists database, organized according to the Story docuemnt in the main Lists directory.
+The procedures and table definitions for the Lists database, organized according to the Story document in the main Lists directory.
 ## Stored Procedures
 Stored procedures are organized primarily by the table/theme they most pertain to: users, lists, items and collaborators.
 ### ```users``` table
@@ -83,7 +83,6 @@ CALL getUserNames();
     ```
   - on error: `ERROR 1644 (52721): Unable to create the list.'
 
-
 - `delList(listID)`
   - remove a list
   - also removes corresponding item items and collaborators
@@ -101,14 +100,21 @@ CALL getUserNames();
     ```
     - on error: `ERROR 1644 (52720): List not found.
 
-- `getUserLists(userId)`
-  - return the list name and listId for a user's list record.
-  - Example
-  ```sql
-    CALL getUserLists(2);
-    ```
-  - on error: `ERROR 1644 (52710): User not found.`
+    - `getLists(userId)`
+      - return the list name and listId for a user's list record.
+      - Example
+      ```sql
+        CALL getUserLists(2);
+        ```
+      - on error: `ERROR 1644 (52710): User not found.`
 
+    - `getListsByAccess(userId)`
+      - return the list information that a user has access to for a given accessType.
+      - Example
+      ```sql
+        CALL getListsByAccess(1,'O');
+        ```
+      - on error: `ERROR 1644 (52710): User not found.`
 
 - `putList(listID, listName, listDescription)`
   - update information for a list.

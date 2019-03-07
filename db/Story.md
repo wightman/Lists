@@ -4,10 +4,10 @@ combinations document in the main Lists directory.
 
 + Signin
   1. created by users with valid credentials (returns token on success)
-    + ```POST /signin```
-    + Supported by sql proc ```verifyUser()```
+      + ```POST /signin```
+      + Supported by sql proc ```verifyUser()```
   2. Users can sign out (removes token)
-    + ```DELETE /signin```
+      + ```DELETE /signin```
 + Password
   1. can be changed by logged in users
     + ```PUT /password```

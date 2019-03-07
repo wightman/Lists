@@ -80,7 +80,7 @@ curl -i -X PUT -H "Content-Type: application/json"  -d '{"listName": "Trucks", "
 
 # delete list info without being logged in (should fail == pass) **PASS**
 curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/signin
-curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/29
+curl -i -X DELETE  -b cookie-jar -k https://lists.hopto.org:61340/users/3/lists/29/item
 
 # delete list info for a logged in user **PASS**
 curl -i -X POST -H "Content-Type: application/json" -d '{"userEmail": "read@wightman.ca", "userPassword": "$2b$10$mytchfear8S1J.oEUMH4t.vh2Y16VbquDyN9H6BYxB3cwpUL0q6lO"}' -c cookie-jar -k https://lists.hopto.org:61340/signin
